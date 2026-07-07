@@ -9,14 +9,22 @@ use Illuminate\Support\Facades\Storage;
 
 class TeamsController extends Controller
 {
-    private function storePhotoSafely(Request $request): ?string
+    private function encodePhotoToDataUrl(Request $request): ?string
     {
         if (! $request->hasFile('photo')) {
             return null;
         }
 
         try {
-            return $request->file('photo')->store('teams', 'public');
+            $file = $request->file('photo');
+            $raw = file_get_contents($file->getRealPath());
+
+            if ($raw === false) {
+                return null;
+            }
+
+            $mime = $file->getMimeType() ?: 'image/jpeg';
+            return 'data:'.$mime.';base64,'.base64_encode($raw);
         } catch (\Throwable $e) {
             Log::error('Team photo upload failed', [
                 'message' => $e->getMessage(),
@@ -44,9 +52,15 @@ class TeamsController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $photoPath = $this->storePhotoSafely($request);
-        if ($photoPath !== null) {
-            $validated['photo'] = $photoPath;
+        $photoDataUrl = $this->encodePhotoToDataUrl($request);
+        if ($request->hasFile('photo') && $photoDataUrl === null) {
+            return back()->withInput()->withErrors([
+                'team' => 'Foto gagal diproses. Coba gunakan gambar lain.',
+            ]);
+        }
+
+        if ($photoDataUrl !== null) {
+            $validated['photo'] = $photoDataUrl;
         }
 
         try {
@@ -78,13 +92,19 @@ class TeamsController extends Controller
         // Handle photo upload
         if ($request->hasFile('photo')) {
             // Delete old photo if exists
-            if ($team->photo && Storage::disk('public')->exists($team->photo)) {
+            if ($team->photo && !str_starts_with($team->photo, 'data:') && Storage::disk('public')->exists($team->photo)) {
                 Storage::disk('public')->delete($team->photo);
             }
 
-            $photoPath = $this->storePhotoSafely($request);
-            if ($photoPath !== null) {
-                $validated['photo'] = $photoPath;
+            $photoDataUrl = $this->encodePhotoToDataUrl($request);
+            if ($photoDataUrl === null) {
+                return back()->withInput()->withErrors([
+                    'team' => 'Foto gagal diproses. Coba gunakan gambar lain.',
+                ]);
+            }
+
+            if ($photoDataUrl !== null) {
+                $validated['photo'] = $photoDataUrl;
             }
         }
 
@@ -108,7 +128,7 @@ class TeamsController extends Controller
     public function destroy(Team $team)
     {
         // Delete photo if exists
-        if ($team->photo && Storage::disk('public')->exists($team->photo)) {
+        if ($team->photo && !str_starts_with($team->photo, 'data:') && Storage::disk('public')->exists($team->photo)) {
             Storage::disk('public')->delete($team->photo);
         }
 
