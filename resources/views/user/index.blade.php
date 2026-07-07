@@ -10,7 +10,7 @@
                 <img src="{{ asset('logo/Logo Toogle Terang.png') }}" alt="JEM Logo" class="h-24 sm:h-28 md:h-32 lg:h-36 w-auto dark:hidden">
                 <img src="{{ asset('logo/Logo Toogle Gelap.png') }}" alt="JEM Logo" class="hidden h-24 sm:h-28 md:h-32 lg:h-36 w-auto dark:block">
             </div>
-            <h1 class="order-2 lg:order-1 text-center lg:text-left font-display text-4xl sm:text-5xl md:text-7xl font-black tracking-tight leading-[0.95] uppercase">
+            <h1 class="order-2 lg:order-1 text-center lg:text-left font-display text-3xl sm:text-5xl md:text-7xl font-black tracking-tight leading-[0.95] uppercase">
                 JEM<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-black via-zinc-400 to-black dark:from-white dark:via-zinc-500 dark:to-white">Production</span>
             </h1>
         </div>
