@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\TeamsController;
 
 // Halaman Utama (User) - Publik
@@ -17,6 +18,16 @@ Route::get('/teams', [TeamsController::class, 'userTeams'])->name('teams');
 Route::get('/portfolio', function () {
     return view('user.portfolio');
 })->name('portfolio');
+
+Route::get('/team-photo', function (Request $request) {
+    $path = $request->query('path');
+
+    if (! $path || ! Storage::disk('public')->exists($path)) {
+        abort(404);
+    }
+
+    return Storage::disk('public')->response($path);
+})->name('team.photo');
 
 // Halaman Login Admin
 Route::get('/login', function () {

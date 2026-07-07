@@ -37,7 +37,12 @@
                 <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-sm">
                     <div class="flex items-start justify-between mb-4">
                         @if ($team->photo)
-                            <img src="{{ asset('storage/' . $team->photo) }}" alt="{{ $team->name }}" class="w-16 h-16 rounded-2xl object-cover">
+                            <div class="relative w-16 h-16">
+                                <img src="{{ route('team.photo', ['path' => $team->photo]) }}" alt="{{ $team->name }}" class="w-16 h-16 rounded-2xl object-cover" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                                <div class="hidden w-16 h-16 bg-zinc-900 dark:bg-zinc-100 rounded-2xl flex items-center justify-center text-white dark:text-black font-display text-2xl font-bold">
+                                    {{ $team->initials }}
+                                </div>
+                            </div>
                         @else
                             <div class="w-16 h-16 bg-zinc-900 dark:bg-zinc-100 rounded-2xl flex items-center justify-center text-white dark:text-black font-display text-2xl font-bold">
                                 {{ $team->initials }}

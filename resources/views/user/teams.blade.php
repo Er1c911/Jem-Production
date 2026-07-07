@@ -21,7 +21,12 @@
                     <div class="group border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:border-black dark:hover:border-white transition-all duration-300 flex flex-col">
                         <!-- Photo Section - Portrait -->
                         @if ($member->photo)
-                            <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->name }}" class="w-full h-80 object-cover">
+                            <div class="relative w-full h-80">
+                                <img src="{{ route('team.photo', ['path' => $member->photo]) }}" alt="{{ $member->name }}" class="w-full h-80 object-cover" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                                <div class="hidden w-full h-80 bg-gradient-to-br from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300 flex items-center justify-center text-white dark:text-black font-display text-6xl font-bold">
+                                    {{ $member->initials }}
+                                </div>
+                            </div>
                         @else
                             <div class="w-full h-80 bg-gradient-to-br from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300 flex items-center justify-center text-white dark:text-black font-display text-6xl font-bold">
                                 {{ $member->initials }}
