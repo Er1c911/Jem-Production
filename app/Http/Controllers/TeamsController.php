@@ -4,9 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Models\Team;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class TeamsController extends Controller
 {
+    private function storePhotoSafely(Request $request): ?string
+    {
+        if (! $request->hasFile('photo')) {
+            return null;
+        }
+
+        try {
+            return $request->file('photo')->store('teams', 'public');
+        } catch (\Throwable $e) {
+            Log::error('Team photo upload failed', [
+                'message' => $e->getMessage(),
+            ]);
+
+            return null;
+        }
+    }
+
     // Show teams management page (Admin)
     public function index()
     {
@@ -25,12 +44,22 @@ class TeamsController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Handle photo upload
-        if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('teams', 'public');
+        $photoPath = $this->storePhotoSafely($request);
+        if ($photoPath !== null) {
+            $validated['photo'] = $photoPath;
         }
 
-        Team::create($validated);
+        try {
+            Team::create($validated);
+        } catch (\Throwable $e) {
+            Log::error('Create team failed', [
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()->withInput()->withErrors([
+                'team' => 'Gagal menyimpan data tim. Silakan coba lagi.',
+            ]);
+        }
 
         return redirect()->route('admin.teams.index')->with('success', 'Tim berhasil ditambahkan');
     }
@@ -49,13 +78,28 @@ class TeamsController extends Controller
         // Handle photo upload
         if ($request->hasFile('photo')) {
             // Delete old photo if exists
-            if ($team->photo && \Illuminate\Support\Facades\Storage::disk('public')->exists($team->photo)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($team->photo);
+            if ($team->photo && Storage::disk('public')->exists($team->photo)) {
+                Storage::disk('public')->delete($team->photo);
             }
-            $validated['photo'] = $request->file('photo')->store('teams', 'public');
+
+            $photoPath = $this->storePhotoSafely($request);
+            if ($photoPath !== null) {
+                $validated['photo'] = $photoPath;
+            }
         }
 
-        $team->update($validated);
+        try {
+            $team->update($validated);
+        } catch (\Throwable $e) {
+            Log::error('Update team failed', [
+                'team_id' => $team->id,
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()->withInput()->withErrors([
+                'team' => 'Gagal memperbarui data tim. Silakan coba lagi.',
+            ]);
+        }
 
         return redirect()->route('admin.teams.index')->with('success', 'Tim berhasil diperbarui');
     }
@@ -64,8 +108,8 @@ class TeamsController extends Controller
     public function destroy(Team $team)
     {
         // Delete photo if exists
-        if ($team->photo && \Illuminate\Support\Facades\Storage::disk('public')->exists($team->photo)) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($team->photo);
+        if ($team->photo && Storage::disk('public')->exists($team->photo)) {
+            Storage::disk('public')->delete($team->photo);
         }
 
         $team->delete();

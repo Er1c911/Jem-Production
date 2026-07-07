@@ -15,6 +15,18 @@
         </button>
     </div>
 
+    @if (session('success'))
+        <div class="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if ($errors->has('team'))
+        <div class="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300">
+            {{ $errors->first('team') }}
+        </div>
+    @endif
+
     @if ($teams->isEmpty())
         <div class="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-12 text-center">
             <p class="text-zinc-500 dark:text-zinc-400">Belum ada tim. Tambahkan tim baru untuk memulai.</p>
