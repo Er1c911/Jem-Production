@@ -53,7 +53,7 @@
                         </div>
                         <div class="flex flex-wrap justify-end gap-2">
                             <button
-                                onclick="editPortfolio({{ $item->id }}, @js($item->title), @js($item->label), @js($item->description), @js($item->tech_stack), @js($item->external_link), {{ $item->sort_order }})"
+                                onclick="editPortfolio({{ $item->id }}, @js($item->title), @js($item->label), @js($item->description), @js($item->external_link), {{ $item->sort_order }})"
                                 class="text-xs bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition"
                             >
                                 Edit
@@ -76,13 +76,6 @@
                         </a>
                     @endif
 
-                    @if (!empty($item->tech_stack))
-                        <div class="flex flex-wrap gap-2">
-                            @foreach (collect(explode(',', $item->tech_stack))->map(fn($v) => trim($v))->filter() as $tag)
-                                <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-full">{{ $tag }}</span>
-                            @endforeach
-                        </div>
-                    @endif
                 </div>
             @endforeach
         </div>
@@ -125,11 +118,6 @@
         </div>
 
         <div>
-            <label class="text-sm font-bold uppercase tracking-widest opacity-60">Tech Stack (pisahkan dengan koma)</label>
-            <input type="text" name="tech_stack" id="portfolioTechStack" class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition" placeholder="Laravel, Redis, WebSocket">
-        </div>
-
-        <div>
             <label class="text-sm font-bold uppercase tracking-widest opacity-60">Urutan Tampil</label>
             <input type="number" min="1" name="sort_order" id="portfolioSortOrder" class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition" value="1">
         </div>
@@ -146,12 +134,11 @@
 </dialog>
 
 <script>
-    function editPortfolio(id, title, label, description, techStack, externalLink, sortOrder) {
+    function editPortfolio(id, title, label, description, externalLink, sortOrder) {
         document.getElementById('portfolioModalTitle').textContent = 'Edit Portofolio';
         document.getElementById('portfolioTitle').value = title;
         document.getElementById('portfolioLabel').value = label;
         document.getElementById('portfolioDescription').value = description;
-        document.getElementById('portfolioTechStack').value = techStack ?? '';
         document.getElementById('portfolioExternalLink').value = externalLink ?? '';
         document.getElementById('portfolioSortOrder').value = sortOrder ?? 1;
         document.getElementById('portfolioImage').value = '';
