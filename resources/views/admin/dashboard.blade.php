@@ -24,6 +24,14 @@
             </div>
             <span class="text-xs font-medium text-zinc-500 mt-6 group-hover:text-black dark:group-hover:text-white transition">Kelola anggota tim →</span>
         </a>
+
+        <a href="{{ route('admin.portfolios.index') }}" class="group bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 p-8 rounded-2xl shadow-sm hover:border-black dark:hover:border-white transition duration-300 flex flex-col justify-between">
+            <div>
+                <div class="text-xs uppercase tracking-widest font-bold opacity-40">Management</div>
+                <div class="font-display text-3xl font-black tracking-tight mt-4">Portfolio</div>
+            </div>
+            <span class="text-xs font-medium text-zinc-500 mt-6 group-hover:text-black dark:group-hover:text-white transition">Kelola item portofolio →</span>
+        </a>
     </div>
 </div>
 @endsection

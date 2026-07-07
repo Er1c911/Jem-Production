@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\TeamsController;
+use App\Http\Controllers\PortfolioController;
 
 // Halaman Utama (User) - Publik
 Route::get('/', function () {
@@ -15,9 +16,7 @@ Route::get('/', function () {
 Route::get('/teams', [TeamsController::class, 'userTeams'])->name('teams');
 
 // Halaman Portfolio
-Route::get('/portfolio', function () {
-    return view('user.portfolio');
-})->name('portfolio');
+Route::get('/portfolio', [PortfolioController::class, 'userPortfolio'])->name('portfolio');
 
 Route::get('/team-photo', function (Request $request) {
     $path = $request->query('path');
@@ -88,6 +87,16 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             'store' => 'admin.teams.store',
             'update' => 'admin.teams.update',
             'destroy' => 'admin.teams.destroy',
+        ]
+    ]);
+
+    // Portfolio Management
+    Route::resource('portfolios', PortfolioController::class, [
+        'names' => [
+            'index' => 'admin.portfolios.index',
+            'store' => 'admin.portfolios.store',
+            'update' => 'admin.portfolios.update',
+            'destroy' => 'admin.portfolios.destroy',
         ]
     ]);
 });
