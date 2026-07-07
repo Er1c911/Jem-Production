@@ -86,7 +86,7 @@
     </main>
 
     <footer class="border-t border-zinc-200 dark:border-zinc-900 py-8 text-center text-xs tracking-widest uppercase opacity-40">
-        &copy; {{ date('Y') }} JEM-PRODUCTION. Crafting Digital Purity.
+        &copy; 2026 JEM-PRODUCTION. Music Audio Production
     </footer>
 
     <script>
