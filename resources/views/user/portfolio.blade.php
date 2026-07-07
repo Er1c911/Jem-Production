@@ -10,7 +10,7 @@
                 Portofolio
             </h1>
             <p class="text-lg md:text-xl font-light text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed">
-                Segera Hadir...
+                Coming Soon...
             </p>
         </div>
 
