@@ -6,7 +6,7 @@
 <div class="max-w-6xl mx-auto w-full">
     <div class="space-y-12">
         <div class="space-y-4">
-            <h1 class="font-display text-5xl md:text-7xl font-black tracking-tight leading-[0.95] uppercase">
+            <h1 class="font-display text-4xl sm:text-5xl md:text-7xl font-black tracking-tight leading-[0.95] uppercase">
                 Our Teams
             </h1>
         </div>
@@ -29,7 +29,7 @@
                         @endif
                         
                         <!-- Info Section -->
-                        <div class="p-8 flex-1 flex flex-col justify-between">
+                        <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
                             <div>
                                 <h3 class="text-xl font-bold uppercase tracking-wide mb-2">{{ $member->name }}</h3>
                                 <p class="text-sm opacity-70 mb-4 font-medium">{{ $member->position }}</p>

@@ -6,7 +6,7 @@
 <div class="max-w-6xl mx-auto w-full">
     <div class="space-y-12">
         <div class="space-y-4">
-            <h1 class="font-display text-5xl md:text-7xl font-black tracking-tight leading-[0.95] uppercase">
+            <h1 class="font-display text-4xl sm:text-5xl md:text-7xl font-black tracking-tight leading-[0.95] uppercase">
                 Portfolio
             </h1>
             <p class="text-lg md:text-xl font-light text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed">
@@ -28,7 +28,7 @@
                     <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-4 leading-relaxed">
                         Platform analitik real-time dengan visualisasi data yang intuitif dan berbasis monokrom. Dirancang untuk mempercepat pengambilan keputusan tim produksi.
                     </p>
-                    <div class="flex gap-2">
+                    <div class="flex flex-wrap gap-2">
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">React</span>
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">Node.js</span>
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">PostgreSQL</span>
@@ -49,7 +49,7 @@
                     <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-4 leading-relaxed">
                         Sistem kolaborasi tim terintegrasi dengan fitur komunikasi, manajemen tugas, dan tracking progress. Meminimalkan noise visual untuk fokus maksimal.
                     </p>
-                    <div class="flex gap-2">
+                    <div class="flex flex-wrap gap-2">
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">Laravel</span>
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">WebSocket</span>
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">Redis</span>
@@ -70,7 +70,7 @@
                     <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-4 leading-relaxed">
                         Engine otomasi produksi yang menangani workflow kompleks dengan efisiensi tinggi. Mengurangi manual work dan meningkatkan output berkualitas.
                     </p>
-                    <div class="flex gap-2">
+                    <div class="flex flex-wrap gap-2">
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">Python</span>
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">Celery</span>
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">Docker</span>
@@ -91,7 +91,7 @@
                     <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-4 leading-relaxed">
                         Platform manajemen resource dengan alokasi dinamis dan optimalisasi beban kerja. Memaksimalkan utilitas tim dan peralatan produksi.
                     </p>
-                    <div class="flex gap-2">
+                    <div class="flex flex-wrap gap-2">
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">Vue.js</span>
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">FastAPI</span>
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">MongoDB</span>
@@ -112,7 +112,7 @@
                     <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-4 leading-relaxed">
                         Sistem kontrol kualitas otomatis dengan machine learning untuk deteksi anomali. Memastikan konsistensi output dan standar produksi tertinggi.
                     </p>
-                    <div class="flex gap-2">
+                    <div class="flex flex-wrap gap-2">
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">TensorFlow</span>
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">OpenCV</span>
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">AWS</span>
@@ -133,7 +133,7 @@
                     <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-4 leading-relaxed">
                         Sistem pelaporan komprehensif dengan custom reports dan scheduled delivery. Memberikan insight mendalam tentang performa produksi.
                     </p>
-                    <div class="flex gap-2">
+                    <div class="flex flex-wrap gap-2">
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">Next.js</span>
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">GraphQL</span>
                         <span class="text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 px-3 py-1 rounded-full">Stripe</span>

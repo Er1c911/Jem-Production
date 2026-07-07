@@ -7,7 +7,7 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-zinc-200 dark:border-zinc-800 pb-8">
         <div>
             <span class="text-xs font-bold uppercase tracking-widest opacity-50 font-display">Overview</span>
-            <h1 class="font-display text-4xl font-black uppercase tracking-tight mt-1">Control Room</h1>
+            <h1 class="font-display text-3xl sm:text-4xl font-black uppercase tracking-tight mt-1">Control Room</h1>
             <p class="text-sm text-zinc-500">Welcome back, <span class="font-semibold text-black dark:text-white">{{ Auth::user()->name }}</span></p>
         </div>
         <div class="flex items-center gap-3 bg-zinc-100 dark:bg-zinc-900 p-2 rounded-xl border border-zinc-200 dark:border-zinc-800">

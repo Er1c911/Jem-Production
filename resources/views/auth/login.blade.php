@@ -3,7 +3,7 @@
 @section('title', 'Admin Gateway')
 
 @section('content')
-<div class="max-w-md w-full mx-auto border border-black dark:border-white p-8 bg-neutral-50 dark:bg-neutral-900">
+<div class="max-w-md w-full mx-auto border border-black dark:border-white p-6 sm:p-8 bg-neutral-50 dark:bg-neutral-900">
     <div class="mb-8 text-center">
         <h2 class="text-2xl font-black uppercase tracking-wider">Admin Portal</h2>
         <p class="text-xs opacity-60 uppercase mt-1">Gunakan kredensial jem-production</p>

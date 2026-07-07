@@ -10,7 +10,7 @@
             <h1 class="font-display text-4xl font-black uppercase tracking-tight mt-1">Kelola Teams</h1>
             <p class="text-sm text-zinc-500">Sinkronisasi data tim dengan halaman public</p>
         </div>
-        <button onclick="document.getElementById('addTeamModal').showModal()" class="bg-black text-white dark:bg-white dark:text-black px-6 py-3 font-bold uppercase tracking-widest text-sm rounded-lg hover:scale-105 transition transform">
+        <button onclick="document.getElementById('addTeamModal').showModal()" class="w-full md:w-auto bg-black text-white dark:bg-white dark:text-black px-6 py-3 font-bold uppercase tracking-widest text-sm rounded-lg hover:scale-105 transition transform">
             + Tambah Tim
         </button>
     </div>
@@ -22,7 +22,7 @@
     @else
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($teams as $team)
-                <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 rounded-2xl p-8 shadow-sm">
+                <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-sm">
                     <div class="flex items-start justify-between mb-4">
                         @if ($team->photo)
                             <img src="{{ asset('storage/' . $team->photo) }}" alt="{{ $team->name }}" class="w-16 h-16 rounded-2xl object-cover">
@@ -31,7 +31,7 @@
                                 {{ $team->initials }}
                             </div>
                         @endif
-                        <div class="flex gap-2">
+                        <div class="flex flex-wrap justify-end gap-2">
                             <button onclick="editTeam({{ $team->id }}, '{{ $team->name }}', '{{ $team->position }}', '{{ $team->description }}', '{{ $team->initials }}')" class="text-xs bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                                 Edit
                             </button>
@@ -54,7 +54,7 @@
 </div>
 
 <!-- Modal Tambah/Edit Tim -->
-<dialog id="addTeamModal" class="backdrop:bg-black/50 backdrop:backdrop-blur-sm rounded-2xl p-6 max-w-md w-full shadow-2xl">
+<dialog id="addTeamModal" class="backdrop:bg-black/50 backdrop:backdrop-blur-sm rounded-2xl p-4 sm:p-6 max-w-md w-[calc(100%-2rem)] shadow-2xl">
     <div class="flex justify-between items-center mb-6">
         <h2 class="font-display text-2xl font-black uppercase tracking-tight" id="modalTitle">Tambah Tim</h2>
         <button type="button" onclick="document.getElementById('addTeamModal').close()" class="text-2xl opacity-50 hover:opacity-100">×</button>
@@ -95,7 +95,7 @@
             <textarea name="description" id="teamDescription" rows="4" class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition resize-none" required></textarea>
         </div>
 
-        <div class="flex gap-3 pt-4">
+        <div class="flex flex-col sm:flex-row gap-3 pt-4">
             <button type="button" onclick="document.getElementById('addTeamModal').close()" class="flex-1 border border-zinc-200 dark:border-zinc-800 px-4 py-2 rounded-lg font-bold uppercase tracking-widest text-sm hover:bg-zinc-50 dark:hover:bg-zinc-900 transition">
                 Batal
             </button>
