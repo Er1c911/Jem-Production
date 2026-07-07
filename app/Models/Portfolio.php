@@ -14,6 +14,8 @@ class Portfolio extends Model
         'label',
         'description',
         'tech_stack',
+        'external_link',
+        'image',
         'sort_order',
     ];
 }

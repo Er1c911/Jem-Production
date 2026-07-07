@@ -35,6 +35,16 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @foreach ($portfolios as $item)
                 <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-sm">
+                    <div class="mb-5 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
+                        @if (!empty($item->image))
+                            <img src="{{ $item->image }}" alt="{{ $item->title }}" class="w-full h-44 object-cover">
+                        @else
+                            <div class="h-44 bg-gradient-to-br from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300 flex items-center justify-center">
+                                <div class="text-white dark:text-black text-sm uppercase tracking-widest opacity-80">Tanpa Gambar</div>
+                            </div>
+                        @endif
+                    </div>
+
                     <div class="flex items-start justify-between gap-3 mb-4">
                         <div>
                             <div class="text-xs uppercase tracking-widest opacity-50">Urutan: {{ $item->sort_order }}</div>
@@ -43,7 +53,7 @@
                         </div>
                         <div class="flex flex-wrap justify-end gap-2">
                             <button
-                                onclick="editPortfolio({{ $item->id }}, @js($item->title), @js($item->label), @js($item->description), @js($item->tech_stack), {{ $item->sort_order }})"
+                                onclick="editPortfolio({{ $item->id }}, @js($item->title), @js($item->label), @js($item->description), @js($item->tech_stack), @js($item->external_link), {{ $item->sort_order }})"
                                 class="text-xs bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition"
                             >
                                 Edit
@@ -59,6 +69,12 @@
                     </div>
 
                     <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">{{ $item->description }}</p>
+
+                    @if (!empty($item->external_link))
+                        <a href="{{ $item->external_link }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-xs font-semibold underline underline-offset-4 mb-4">
+                            Buka Link Portofolio
+                        </a>
+                    @endif
 
                     @if (!empty($item->tech_stack))
                         <div class="flex flex-wrap gap-2">
@@ -79,7 +95,7 @@
         <button type="button" onclick="document.getElementById('portfolioModal').close()" class="text-2xl opacity-50 hover:opacity-100">×</button>
     </div>
 
-    <form id="portfolioForm" method="POST" action="{{ route('admin.portfolios.store') }}" class="space-y-4">
+    <form id="portfolioForm" method="POST" action="{{ route('admin.portfolios.store') }}" class="space-y-4" enctype="multipart/form-data">
         @csrf
 
         <div>
@@ -95,6 +111,17 @@
         <div>
             <label class="text-sm font-bold uppercase tracking-widest opacity-60">Deskripsi</label>
             <textarea name="description" id="portfolioDescription" rows="4" class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition resize-none" required></textarea>
+        </div>
+
+        <div>
+            <label class="text-sm font-bold uppercase tracking-widest opacity-60">Gambar Portofolio</label>
+            <input type="file" name="image" id="portfolioImage" accept="image/*" class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition">
+            <small class="opacity-60">Format: JPG, PNG, GIF, WEBP | Maks: 2MB</small>
+        </div>
+
+        <div>
+            <label class="text-sm font-bold uppercase tracking-widest opacity-60">Link Portofolio</label>
+            <input type="url" name="external_link" id="portfolioExternalLink" class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition" placeholder="https://contoh.com/project">
         </div>
 
         <div>
@@ -119,13 +146,15 @@
 </dialog>
 
 <script>
-    function editPortfolio(id, title, label, description, techStack, sortOrder) {
+    function editPortfolio(id, title, label, description, techStack, externalLink, sortOrder) {
         document.getElementById('portfolioModalTitle').textContent = 'Edit Portofolio';
         document.getElementById('portfolioTitle').value = title;
         document.getElementById('portfolioLabel').value = label;
         document.getElementById('portfolioDescription').value = description;
         document.getElementById('portfolioTechStack').value = techStack ?? '';
+        document.getElementById('portfolioExternalLink').value = externalLink ?? '';
         document.getElementById('portfolioSortOrder').value = sortOrder ?? 1;
+        document.getElementById('portfolioImage').value = '';
 
         const form = document.getElementById('portfolioForm');
         form.action = '{{ route("admin.portfolios.update", ":id") }}'.replace(':id', id);

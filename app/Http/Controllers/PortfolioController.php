@@ -8,6 +8,28 @@ use Illuminate\Support\Facades\Log;
 
 class PortfolioController extends Controller
 {
+    private function encodeImageToDataUrl(Request $request): ?string
+    {
+        if (! $request->hasFile('image')) {
+            return null;
+        }
+
+        try {
+            $file = $request->file('image');
+            $raw = file_get_contents($file->getRealPath());
+
+            if ($raw === false) {
+                return null;
+            }
+
+            $mime = $file->getMimeType() ?: 'image/jpeg';
+            return 'data:'.$mime.';base64,'.base64_encode($raw);
+        } catch (\Throwable $e) {
+            Log::error('Encode portfolio image failed', ['message' => $e->getMessage()]);
+            return null;
+        }
+    }
+
     public function index()
     {
         $portfolios = Portfolio::orderBy('sort_order')->orderBy('id')->get();
@@ -21,10 +43,22 @@ class PortfolioController extends Controller
             'label' => 'required|string|max:255',
             'description' => 'required|string',
             'tech_stack' => 'nullable|string|max:1000',
+            'external_link' => 'nullable|url|max:2048',
             'sort_order' => 'nullable|integer|min:1',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $validated['sort_order'] = $validated['sort_order'] ?? (Portfolio::max('sort_order') + 1);
+
+        $imageDataUrl = $this->encodeImageToDataUrl($request);
+        if ($request->hasFile('image') && $imageDataUrl === null) {
+            return back()->withInput()->withErrors([
+                'portfolio' => 'Gagal memproses gambar portofolio. Coba gunakan file lain.',
+            ]);
+        }
+        if ($imageDataUrl !== null) {
+            $validated['image'] = $imageDataUrl;
+        }
 
         try {
             Portfolio::create($validated);
@@ -45,10 +79,22 @@ class PortfolioController extends Controller
             'label' => 'required|string|max:255',
             'description' => 'required|string',
             'tech_stack' => 'nullable|string|max:1000',
+            'external_link' => 'nullable|url|max:2048',
             'sort_order' => 'nullable|integer|min:1',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $validated['sort_order'] = $validated['sort_order'] ?? $portfolio->sort_order;
+
+        $imageDataUrl = $this->encodeImageToDataUrl($request);
+        if ($request->hasFile('image') && $imageDataUrl === null) {
+            return back()->withInput()->withErrors([
+                'portfolio' => 'Gagal memproses gambar portofolio. Coba gunakan file lain.',
+            ]);
+        }
+        if ($imageDataUrl !== null) {
+            $validated['image'] = $imageDataUrl;
+        }
 
         try {
             $portfolio->update($validated);

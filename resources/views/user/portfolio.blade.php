@@ -22,12 +22,34 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 @foreach ($portfolios as $item)
                     <div class="group border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:border-black dark:hover:border-white transition-all duration-300">
-                        <div class="aspect-video bg-gradient-to-br from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300 flex items-center justify-center">
-                            <div class="text-white dark:text-black text-center">
-                                <div class="text-4xl font-display font-black mb-2">{{ str_pad((string) ($loop->iteration), 2, '0', STR_PAD_LEFT) }}</div>
-                                <div class="text-sm uppercase tracking-widest opacity-80">{{ $item->label }}</div>
+                        @if (!empty($item->external_link))
+                            <a href="{{ $item->external_link }}" target="_blank" rel="noopener noreferrer" class="block aspect-video" aria-label="Buka link {{ $item->title }}">
+                                @if (!empty($item->image))
+                                    <img src="{{ $item->image }}" alt="{{ $item->title }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full bg-gradient-to-br from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300 flex items-center justify-center">
+                                        <div class="text-white dark:text-black text-center">
+                                            <div class="text-4xl font-display font-black mb-2">{{ str_pad((string) ($loop->iteration), 2, '0', STR_PAD_LEFT) }}</div>
+                                            <div class="text-sm uppercase tracking-widest opacity-80">{{ $item->label }}</div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </a>
+                        @else
+                            <div class="aspect-video">
+                                @if (!empty($item->image))
+                                    <img src="{{ $item->image }}" alt="{{ $item->title }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full bg-gradient-to-br from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300 flex items-center justify-center">
+                                        <div class="text-white dark:text-black text-center">
+                                            <div class="text-4xl font-display font-black mb-2">{{ str_pad((string) ($loop->iteration), 2, '0', STR_PAD_LEFT) }}</div>
+                                            <div class="text-sm uppercase tracking-widest opacity-80">{{ $item->label }}</div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
-                        </div>
+                        @endif
+
                         <div class="p-6">
                             <h3 class="text-xl font-bold uppercase tracking-wide mb-2">{{ $item->title }}</h3>
                             <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-4 leading-relaxed">
