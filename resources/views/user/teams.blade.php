@@ -22,7 +22,7 @@
                         <!-- Photo Section - Portrait -->
                         @if ($member->photo)
                             <div class="relative w-full h-80">
-                                <img src="{{ route('team.photo', ['path' => $member->photo]) }}" alt="{{ $member->name }}" class="w-full h-80 object-cover" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                                <img src="{{ route('team.photo', ['path' => $member->photo], false) }}" alt="{{ $member->name }}" class="w-full h-80 object-cover" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
                                 <div class="hidden w-full h-80 bg-gradient-to-br from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300 flex items-center justify-center text-white dark:text-black font-display text-6xl font-bold">
                                     {{ $member->initials }}
                                 </div>
