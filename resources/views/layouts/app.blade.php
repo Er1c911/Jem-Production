@@ -40,7 +40,7 @@
             <nav class="flex gap-6 text-sm font-medium tracking-wide">
                 <a href="{{ route('home') }}" class="hover:underline underline-offset-4">Home</a>
                 <a href="{{ route('teams') }}" class="hover:underline underline-offset-4">Teams</a>
-                <a href="{{ route('portfolio') }}" class="hover:underline underline-offset-4">Portfolio</a>
+                <a href="{{ route('portfolio') }}" class="hover:underline underline-offset-4">Portofolio</a>
                 @auth
                     <a href="{{ route('admin.dashboard') }}" class="hover:underline underline-offset-4">Dashboard</a>
                     <form action="{{ route('logout') }}" method="POST" class="inline">
@@ -72,7 +72,7 @@
         <nav id="mobile-menu" class="md:hidden hidden mt-4 border-t border-zinc-200 dark:border-zinc-800 pt-4 space-y-3 text-sm font-medium tracking-wide">
             <a href="{{ route('home') }}" class="block py-1">Home</a>
             <a href="{{ route('teams') }}" class="block py-1">Teams</a>
-            <a href="{{ route('portfolio') }}" class="block py-1">Portfolio</a>
+            <a href="{{ route('portfolio') }}" class="block py-1">Portofolio</a>
             @auth
                 <a href="{{ route('admin.dashboard') }}" class="block py-1">Dashboard</a>
                 <form action="{{ route('logout') }}" method="POST" class="block">

@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'JEM Production | Portfolio')
+@section('title', 'JEM Production | Portofolio')
 
 @section('content')
 <div class="max-w-6xl mx-auto w-full">
     <div class="space-y-12">
         <div class="space-y-4">
             <h1 class="font-display text-4xl sm:text-5xl md:text-7xl font-black tracking-tight leading-[0.95] uppercase">
-                Portfolio
+                Portofolio
             </h1>
             <p class="text-lg md:text-xl font-light text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed">
                 Karya-karya produksi yang telah kami wujudkan dengan standar kualitas tertinggi dan fokus pada efisiensi.
