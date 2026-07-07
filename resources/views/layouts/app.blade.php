@@ -28,8 +28,12 @@
 
     <header class="sticky top-0 z-50 backdrop-blur-md bg-zinc-50/70 dark:bg-zinc-950/70 border-b border-zinc-200 dark:border-zinc-800 px-4 sm:px-6 lg:px-8 py-4 sm:py-5 transition-colors duration-500">
         <div class="flex justify-between items-center w-full">
-        <a href="{{ route('home') }}" class="font-display text-xl font-extrabold tracking-tight uppercase hover:opacity-80 transition">
-            jem<span class="font-light opacity-50">.prod</span>
+        <a href="{{ route('home') }}" class="inline-flex items-center gap-3 font-display text-xl font-extrabold tracking-tight uppercase hover:opacity-80 transition">
+            <span class="inline-flex items-center">
+                <img src="{{ asset('logo/Logo Toogle Terang.png') }}" alt="JEM Logo" class="h-7 w-auto dark:hidden">
+                <img src="{{ asset('logo/Logo Toogle Gelap.png') }}" alt="JEM Logo" class="hidden h-7 w-auto dark:block">
+            </span>
+            <span>jem<span class="font-light opacity-50">.prod</span></span>
         </a>
 
         <div class="hidden md:flex items-center gap-8">
