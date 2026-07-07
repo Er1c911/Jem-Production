@@ -48,8 +48,6 @@
                         @csrf
                         <button type="submit" class="opacity-60 hover:opacity-100 transition">Logout</button>
                     </form>
-                @else
-                    <a href="{{ route('login') }}" class="hover:underline underline-offset-4 opacity-80 hover:opacity-100 transition">Admin Portal</a>
                 @endauth
             </nav>
 
@@ -81,8 +79,6 @@
                     @csrf
                     <button type="submit" class="py-1 opacity-60 hover:opacity-100 transition">Logout</button>
                 </form>
-            @else
-                <a href="{{ route('login') }}" class="block py-1 opacity-80 hover:opacity-100 transition">Admin Portal</a>
             @endauth
         </nav>
     </header>
