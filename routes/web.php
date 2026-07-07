@@ -18,6 +18,19 @@ Route::get('/teams', [TeamsController::class, 'userTeams'])->name('teams');
 // Halaman Portfolio
 Route::get('/portfolio', [PortfolioController::class, 'userPortfolio'])->name('portfolio');
 
+// Halaman Shop
+Route::get('/shop', function () {
+    return view('user.shop');
+})->name('shop');
+
+Route::get('/shop/plugins-vst', function () {
+    return view('user.shop-plugins-vst');
+})->name('shop.plugins-vst');
+
+Route::get('/shop/sequencer', function () {
+    return view('user.shop-sequencer');
+})->name('shop.sequencer');
+
 Route::get('/team-photo', function (Request $request) {
     $path = $request->query('path');
 

@@ -41,6 +41,7 @@
                 <a href="{{ route('home') }}" class="hover:underline underline-offset-4">Home</a>
                 <a href="{{ route('teams') }}" class="hover:underline underline-offset-4">Teams</a>
                 <a href="{{ route('portfolio') }}" class="hover:underline underline-offset-4">Portofolio</a>
+                <a href="{{ route('shop') }}" class="hover:underline underline-offset-4">Shop</a>
                 @auth
                     <a href="{{ route('admin.dashboard') }}" class="hover:underline underline-offset-4">Dashboard</a>
                     <form action="{{ route('logout') }}" method="POST" class="inline">
@@ -73,6 +74,7 @@
             <a href="{{ route('home') }}" class="block py-1">Home</a>
             <a href="{{ route('teams') }}" class="block py-1">Teams</a>
             <a href="{{ route('portfolio') }}" class="block py-1">Portofolio</a>
+            <a href="{{ route('shop') }}" class="block py-1">Shop</a>
             @auth
                 <a href="{{ route('admin.dashboard') }}" class="block py-1">Dashboard</a>
                 <form action="{{ route('logout') }}" method="POST" class="block">
