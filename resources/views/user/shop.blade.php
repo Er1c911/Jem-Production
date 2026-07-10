@@ -17,7 +17,7 @@
                 <p class="mt-3 text-zinc-600 dark:text-zinc-400 leading-relaxed">
                     Coming Soon...
                 </p>
-                <span class="mt-5 inline-block text-sm font-semibold tracking-wide opacity-70 group-hover:opacity-100 transition">Lihat halaman &rarr;</span>
+                <span class="mt-5 inline-block text-sm font-semibold tracking-wide opacity-70 group-hover:opacity-100 transition">View page &rarr;</span>
             </a>
 
             <a href="{{ route('shop.sequencer') }}" class="group block rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 hover:border-black dark:hover:border-white transition duration-300">
@@ -25,7 +25,7 @@
                 <p class="mt-3 text-zinc-600 dark:text-zinc-400 leading-relaxed">
                     Sequencer Catalog
                 </p>
-                <span class="mt-5 inline-block text-sm font-semibold tracking-wide opacity-70 group-hover:opacity-100 transition">Lihat halaman &rarr;</span>
+                <span class="mt-5 inline-block text-sm font-semibold tracking-wide opacity-70 group-hover:opacity-100 transition">View page &rarr;</span>
             </a>
         </div>
     </div>
