@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\PortfolioController;
+use App\Http\Controllers\SequencerController;
 
 // Halaman Utama (User) - Publik
 Route::get('/', function () {
@@ -27,9 +28,7 @@ Route::get('/shop/plugins-vst', function () {
     return view('user.shop-plugins-vst');
 })->name('shop.plugins-vst');
 
-Route::get('/shop/sequencer', function () {
-    return view('user.shop-sequencer');
-})->name('shop.sequencer');
+Route::get('/shop/sequencer', [SequencerController::class, 'userSequencer'])->name('shop.sequencer');
 
 Route::get('/team-photo', function (Request $request) {
     $path = $request->query('path');
@@ -92,6 +91,11 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+
+    Route::get('/sequencer', [SequencerController::class, 'index'])->name('admin.sequencer.index');
+    Route::post('/sequencer', [SequencerController::class, 'store'])->name('admin.sequencer.store');
+    Route::put('/sequencer/{sequencer}', [SequencerController::class, 'update'])->name('admin.sequencer.update');
+    Route::delete('/sequencer/{sequencer}', [SequencerController::class, 'destroy'])->name('admin.sequencer.destroy');
 
     // Teams Management
     Route::resource('teams', TeamsController::class, [
