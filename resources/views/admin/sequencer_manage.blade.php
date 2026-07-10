@@ -35,23 +35,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @foreach ($sequencers as $item)
                 <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-sm">
-                    <div class="mb-5 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-black">
-                        @if (!empty($item->video_url))
-                            <video controls class="w-full h-48 object-cover">
-                                <source src="{{ $item->video_url }}" type="video/mp4">
-                                Browser Anda tidak mendukung pemutaran video.
-                            </video>
-                        @elseif (!empty($item->video_path))
-                            <video controls class="w-full h-48 object-cover">
-                                <source src="{{ asset('storage/' . $item->video_path) }}" type="video/mp4">
-                                Browser Anda tidak mendukung pemutaran video.
-                            </video>
-                        @else
-                            <div class="h-48 flex items-center justify-center text-zinc-300 text-sm uppercase tracking-widest">
-                                Tanpa Video
-                            </div>
-                        @endif
-                    </div>
+                    @include('partials.video-player', ['videoUrl' => $item->video_url, 'videoPath' => $item->video_path])
 
                     <div class="flex items-start justify-between gap-3 mb-4">
                         <div>
