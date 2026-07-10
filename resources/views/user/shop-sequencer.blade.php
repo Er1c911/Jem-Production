@@ -23,7 +23,12 @@
                 @foreach ($sequencers as $item)
                     <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 space-y-4">
                         <div class="rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-black">
-                            @if (!empty($item->video_path))
+                                @if (!empty($item->video_url))
+                                    <video controls class="w-full h-52 object-cover">
+                                        <source src="{{ $item->video_url }}" type="video/mp4">
+                                        Browser Anda tidak mendukung pemutaran video.
+                                    </video>
+                                @elseif (!empty($item->video_path))
                                 <video controls class="w-full h-52 object-cover">
                                     <source src="{{ asset('storage/' . $item->video_path) }}" type="video/mp4">
                                     Browser Anda tidak mendukung pemutaran video.

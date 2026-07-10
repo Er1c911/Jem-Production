@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Storage;
 
 class SequencerController extends Controller
 {
+    private function isVercel(): bool
+    {
+        return (bool) env('VERCEL');
+    }
+
     public function index()
     {
         $sequencers = Sequencer::orderByDesc('id')->get();
@@ -17,14 +22,23 @@ class SequencerController extends Controller
 
     public function store(Request $request)
     {
+        $maxVideoKb = $this->isVercel() ? 4096 : 102400;
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'required|string',
-            'video' => 'nullable|file|mimetypes:video/mp4,video/webm,video/quicktime|max:102400',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/webm,video/quicktime|max:'.$maxVideoKb,
+            'video_url' => 'nullable|url|max:2048',
         ]);
 
-        if ($request->hasFile('video')) {
+        if ($this->isVercel() && $request->hasFile('video')) {
+            return back()->withInput()->withErrors([
+                'sequencer' => 'Upload file video besar tidak didukung di Vercel. Gunakan URL video dari storage eksternal.',
+            ]);
+        }
+
+        if (! $this->isVercel() && $request->hasFile('video')) {
             $validated['video_path'] = $request->file('video')->store('sequencers/videos', 'public');
         }
 
@@ -44,14 +58,23 @@ class SequencerController extends Controller
 
     public function update(Request $request, Sequencer $sequencer)
     {
+        $maxVideoKb = $this->isVercel() ? 4096 : 102400;
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'required|string',
-            'video' => 'nullable|file|mimetypes:video/mp4,video/webm,video/quicktime|max:102400',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/webm,video/quicktime|max:'.$maxVideoKb,
+            'video_url' => 'nullable|url|max:2048',
         ]);
 
-        if ($request->hasFile('video')) {
+        if ($this->isVercel() && $request->hasFile('video')) {
+            return back()->withInput()->withErrors([
+                'sequencer' => 'Upload file video besar tidak didukung di Vercel. Gunakan URL video dari storage eksternal.',
+            ]);
+        }
+
+        if (! $this->isVercel() && $request->hasFile('video')) {
             if (!empty($sequencer->video_path) && Storage::disk('public')->exists($sequencer->video_path)) {
                 Storage::disk('public')->delete($sequencer->video_path);
             }

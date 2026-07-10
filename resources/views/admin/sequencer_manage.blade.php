@@ -36,7 +36,12 @@
             @foreach ($sequencers as $item)
                 <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-sm">
                     <div class="mb-5 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-black">
-                        @if (!empty($item->video_path))
+                        @if (!empty($item->video_url))
+                            <video controls class="w-full h-48 object-cover">
+                                <source src="{{ $item->video_url }}" type="video/mp4">
+                                Browser Anda tidak mendukung pemutaran video.
+                            </video>
+                        @elseif (!empty($item->video_path))
                             <video controls class="w-full h-48 object-cover">
                                 <source src="{{ asset('storage/' . $item->video_path) }}" type="video/mp4">
                                 Browser Anda tidak mendukung pemutaran video.
@@ -55,7 +60,7 @@
                         </div>
                         <div class="flex flex-wrap justify-end gap-2">
                             <button
-                                onclick="editSequencer({{ $item->id }}, @js($item->title), @js((string) $item->price), @js($item->description))"
+                                onclick="editSequencer({{ $item->id }}, @js($item->title), @js((string) $item->price), @js($item->description), @js($item->video_url))"
                                 class="text-xs bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition"
                             >
                                 Edit
@@ -102,10 +107,22 @@
         </div>
 
         <div>
+            <label class="text-sm font-bold uppercase tracking-widest opacity-60">Video URL</label>
+            <input type="url" name="video_url" id="sequencerVideoUrl" placeholder="https://..." class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition">
+            <small class="opacity-60">Gunakan link direct video (mis. CDN, Cloudinary, S3/R2 object URL).</small>
+        </div>
+
+        @if (!env('VERCEL'))
+        <div>
             <label class="text-sm font-bold uppercase tracking-widest opacity-60">Upload Video</label>
             <input type="file" name="video" id="sequencerVideo" accept="video/mp4,video/webm,video/quicktime" class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition">
             <small class="opacity-60">Format: MP4, WEBM, MOV | Maks: 100MB</small>
         </div>
+        @else
+        <div class="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
+            Deployment Vercel: upload file video besar tidak didukung. Gunakan Video URL.
+        </div>
+        @endif
 
         <div class="flex flex-col sm:flex-row gap-3 pt-4">
             <button type="button" onclick="document.getElementById('sequencerModal').close()" class="flex-1 border border-zinc-200 dark:border-zinc-800 px-4 py-2 rounded-lg font-bold uppercase tracking-widest text-sm hover:bg-zinc-50 dark:hover:bg-zinc-900 transition">
@@ -119,12 +136,16 @@
 </dialog>
 
 <script>
-    function editSequencer(id, title, price, description) {
+    function editSequencer(id, title, price, description, videoUrl) {
         document.getElementById('sequencerModalTitle').textContent = 'Edit Sequencer';
         document.getElementById('sequencerTitle').value = title;
         document.getElementById('sequencerPrice').value = price;
         document.getElementById('sequencerDescription').value = description;
-        document.getElementById('sequencerVideo').value = '';
+        document.getElementById('sequencerVideoUrl').value = videoUrl ?? '';
+        const fileInput = document.getElementById('sequencerVideo');
+        if (fileInput) {
+            fileInput.value = '';
+        }
 
         const form = document.getElementById('sequencerForm');
         form.action = '{{ route("admin.sequencer.update", ":id") }}'.replace(':id', id);
