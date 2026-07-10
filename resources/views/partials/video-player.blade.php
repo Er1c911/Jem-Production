@@ -2,133 +2,66 @@
     // Accepts either $videoUrl or $videoPath (storage path) or both.
     $src = $videoUrl ?? (isset($videoPath) ? asset('storage/' . $videoPath) : null);
 
-    function isYoutube($url) {
-        return str_contains($url, 'youtube.com') || str_contains($url, 'youtu.be');
-    }
+    $isYoutube = $src && (str_contains($src, 'youtube.com') || str_contains($src, 'youtu.be'));
+    $isGoogleDrive = $src && str_contains($src, 'drive.google.com');
+    $isDirectVideoFile = $src && preg_match('/\.(mp4|webm|ogg)(\?|$)/i', (string) $src);
 
-    function isGoogleDrive($url) {
-        return str_contains($url, 'drive.google.com');
-    }
-
-    function googleDrivePreviewUrl($url) {
-        // Try to extract file id from common Drive URL patterns
-        if (preg_match('/\/d\/([A-Za-z0-9_-]+)/', $url, $m)) {
-            return 'https://drive.google.com/file/d/' . $m[1] . '/preview';
-        }
-
-        // fallback to ?id= pattern
-        $query = parse_url($url, PHP_URL_QUERY);
-        if ($query) {
-            parse_str($query, $qs);
-            if (!empty($qs['id'])) {
-                return 'https://drive.google.com/file/d/' . $qs['id'] . '/preview';
+    $youtubeEmbedUrl = null;
+    if ($isYoutube) {
+        if (str_contains($src, 'youtu.be')) {
+            $parts = explode('/', parse_url($src, PHP_URL_PATH));
+            $id = end($parts);
+            $youtubeEmbedUrl = 'https://www.youtube-nocookie.com/embed/' . $id;
+        } else {
+            parse_str(parse_url($src, PHP_URL_QUERY) ?? '', $query);
+            $id = $query['v'] ?? null;
+            if ($id) {
+                $youtubeEmbedUrl = 'https://www.youtube-nocookie.com/embed/' . $id;
+            } else {
+                $youtubeEmbedUrl = $src;
             }
         }
-
-        return $url;
     }
 
-    function youtubeEmbedUrl($url) {
-        if (str_contains($url, 'youtu.be')) {
-            $parts = explode('/', parse_url($url, PHP_URL_PATH));
-            $id = end($parts);
-            return 'https://www.youtube-nocookie.com/embed/' . $id;
+    $googleDrivePreview = null;
+    if ($isGoogleDrive) {
+        if (preg_match('/\/d\/([A-Za-z0-9_-]+)/', $src, $m)) {
+            $googleDrivePreview = 'https://drive.google.com/file/d/' . $m[1] . '/preview';
+        } else {
+            $q = parse_url($src, PHP_URL_QUERY);
+            if ($q) {
+                parse_str($q, $qs);
+                if (!empty($qs['id'])) {
+                    $googleDrivePreview = 'https://drive.google.com/file/d/' . $qs['id'] . '/preview';
+                }
+            }
+            if (!$googleDrivePreview) {
+                $googleDrivePreview = $src;
+            }
         }
-
-        parse_str(parse_url($url, PHP_URL_QUERY) ?? '', $query);
-        $id = $query['v'] ?? null;
-        if ($id) {
-            return 'https://www.youtube-nocookie.com/embed/' . $id;
-        }
-
-        return $url;
-    }
-
-    function isDirectVideoFile($url) {
-        return preg_match('/\.(mp4|webm|ogg)(\?|$)/i', (string) $url);
     }
 @endphp
 
 <div class="rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-black">
-    @if (!empty($src) && isYoutube($src))
+    @if (!empty($src) && $isYoutube)
         <div class="w-full h-52 md:h-48 bg-black">
-            <iframe class="w-full h-full" src="{{ youtubeEmbedUrl($src) }}" title="Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe class="w-full h-full" src="{{ $youtubeEmbedUrl }}" title="Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
-    @elseif (!empty($src) && isGoogleDrive($src))
+    @elseif (!empty($src) && $isGoogleDrive)
         <div class="w-full h-52 md:h-48 bg-black">
-            <iframe class="w-full h-full" src="{{ googleDrivePreviewUrl($src) }}" title="Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe class="w-full h-full" src="{{ $googleDrivePreview }}" title="Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
-    @elseif (!empty($src) && isDirectVideoFile($src))
+    @elseif (!empty($src) && $isDirectVideoFile)
         <video controls playsinline preload="metadata" class="w-full h-52 md:h-48 object-cover">
             <source src="{{ $src }}" type="video/mp4">
             Browser Anda tidak mendukung pemutaran video.
         </video>
     @elseif (!empty($src))
         <video controls playsinline preload="metadata" class="w-full h-52 md:h-48 object-cover">
-            @php
-                // Accepts either $videoUrl or $videoPath (storage path) or both.
-                $src = $videoUrl ?? (isset($videoPath) ? asset('storage/' . $videoPath) : null);
-
-                $isYoutube = $src && (str_contains($src, 'youtube.com') || str_contains($src, 'youtu.be'));
-                $isGoogleDrive = $src && str_contains($src, 'drive.google.com');
-                $isDirectVideoFile = $src && preg_match('/\.(mp4|webm|ogg)(\?|$)/i', (string) $src);
-
-                $youtubeEmbedUrl = null;
-                if ($isYoutube) {
-                    if (str_contains($src, 'youtu.be')) {
-                        $parts = explode('/', parse_url($src, PHP_URL_PATH));
-                        $id = end($parts);
-                        $youtubeEmbedUrl = 'https://www.youtube-nocookie.com/embed/' . $id;
-                    } else {
-                        parse_str(parse_url($src, PHP_URL_QUERY) ?? '', $query);
-                        $id = $query['v'] ?? null;
-                        if ($id) {
-                            $youtubeEmbedUrl = 'https://www.youtube-nocookie.com/embed/' . $id;
-                        } else {
-                            $youtubeEmbedUrl = $src;
-                        }
-                    }
-                }
-
-                $googleDrivePreview = null;
-                if ($isGoogleDrive) {
-                    if (preg_match('/\/d\/([A-Za-z0-9_-]+)/', $src, $m)) {
-                        $googleDrivePreview = 'https://drive.google.com/file/d/' . $m[1] . '/preview';
-                    } else {
-                        $q = parse_url($src, PHP_URL_QUERY);
-                        if ($q) {
-                            parse_str($q, $qs);
-                            if (!empty($qs['id'])) {
-                                $googleDrivePreview = 'https://drive.google.com/file/d/' . $qs['id'] . '/preview';
-                            }
-                        }
-                        if (!$googleDrivePreview) {
-                            $googleDrivePreview = $src;
-                        }
-                    }
-                }
-            @endphp
-
-            <div class="rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-black">
-                @if (!empty($src) && $isYoutube)
-                    <div class="w-full h-52 md:h-48 bg-black">
-                        <iframe class="w-full h-full" src="{{ $youtubeEmbedUrl }}" title="Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                @elseif (!empty($src) && $isGoogleDrive)
-                    <div class="w-full h-52 md:h-48 bg-black">
-                        <iframe class="w-full h-full" src="{{ $googleDrivePreview }}" title="Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                @elseif (!empty($src) && $isDirectVideoFile)
-                    <video controls playsinline preload="metadata" class="w-full h-52 md:h-48 object-cover">
-                        <source src="{{ $src }}" type="video/mp4">
-                        Browser Anda tidak mendukung pemutaran video.
-                    </video>
-                @elseif (!empty($src))
-                    <video controls playsinline preload="metadata" class="w-full h-52 md:h-48 object-cover">
-                        <source src="{{ $src }}">
-                        Browser Anda tidak mendukung pemutaran video.
-                    </video>
-                @else
-                    <div class="h-52 md:h-48 flex items-center justify-center text-zinc-300 text-sm uppercase tracking-widest">Tanpa Video</div>
-                @endif
-            </div>
+            <source src="{{ $src }}">
+            Browser Anda tidak mendukung pemutaran video.
+        </video>
+    @else
+        <div class="h-52 md:h-48 flex items-center justify-center text-zinc-300 text-sm uppercase tracking-widest">Tanpa Video</div>
+    @endif
+</div>
