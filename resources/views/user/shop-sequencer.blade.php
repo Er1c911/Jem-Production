@@ -26,10 +26,10 @@
 
                         <div>
                             <h2 class="font-display text-2xl font-black tracking-tight uppercase">{{ $item->title }}</h2>
-                            <p class="text-sm opacity-70 mt-1">Rp {{ number_format((float) $item->price, 0, ',', '.') }}</p>
+                            <p class="text-sm font-semibold opacity-70 mt-1">Rp {{ number_format((float) $item->price, 0, ',', '.') }}</p>
                         </div>
 
-                        <p class="text-zinc-600 dark:text-zinc-400 leading-snug whitespace-pre-line">{!! nl2br(e($item->description)) !!}</p>
+                        <p class="text-zinc-600 dark:text-zinc-400 leading-tight whitespace-pre-line">{!! nl2br(e($item->description)) !!}</p>
                     </div>
                 @endforeach
             </div>

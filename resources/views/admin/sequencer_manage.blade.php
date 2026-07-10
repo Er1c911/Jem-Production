@@ -40,7 +40,7 @@
                     <div class="flex items-start justify-between gap-3 mb-4">
                         <div>
                             <h3 class="text-lg font-bold uppercase tracking-wide">{{ $item->title }}</h3>
-                            <p class="text-sm opacity-70">Rp {{ number_format((float) $item->price, 0, ',', '.') }}</p>
+                            <p class="text-sm font-semibold opacity-70">Rp {{ number_format((float) $item->price, 0, ',', '.') }}</p>
                         </div>
                         <div class="flex flex-wrap justify-end gap-2">
                             <button
@@ -59,7 +59,7 @@
                         </div>
                     </div>
 
-                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-snug whitespace-pre-line">{!! nl2br(e($item->description)) !!}</p>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-tight whitespace-pre-line">{!! nl2br(e($item->description)) !!}</p>
                 </div>
             @endforeach
         </div>
