@@ -42,11 +42,8 @@
                         <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
                             <div>
                                 <h3 class="text-xl font-bold uppercase tracking-wide mb-2">{{ $member->name }}</h3>
-                                <p class="text-sm opacity-70 mb-4 font-medium">{{ $member->position }}</p>
+                                <p class="text-sm opacity-70 font-medium">{{ $member->position }}</p>
                             </div>
-                            <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                                {{ $member->description }}
-                            </p>
                         </div>
                     </div>
                 @endforeach

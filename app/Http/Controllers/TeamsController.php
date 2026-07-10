@@ -47,7 +47,6 @@ class TeamsController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'position' => 'required|string|max:255',
-            'description' => 'required|string',
             'initials' => 'required|string|max:3',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -84,7 +83,6 @@ class TeamsController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'position' => 'required|string|max:255',
-            'description' => 'required|string',
             'initials' => 'required|string|max:3',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);

@@ -15,7 +15,7 @@
             </h1>
         </div>
         <p class="text-lg md:text-xl font-light text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed">
-            Turning your audio into reality. From song arrangement to the final master, we deliver exceptional music production.
+            Welcome to JEM Production. Founded in June 2026, we’re here to elevate your sound and events. From custom jingles, background music, and sequencers to professional recording and vocal directing, we bring your musical vision to life.
         </p>
     </div>    
 </div>

@@ -54,7 +54,7 @@
                             </div>
                         @endif
                         <div class="flex flex-wrap justify-end gap-2">
-                            <button onclick="editTeam({{ $team->id }}, '{{ $team->name }}', '{{ $team->position }}', '{{ $team->description }}', '{{ $team->initials }}')" class="text-xs bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
+                            <button onclick="editTeam({{ $team->id }}, '{{ $team->name }}', '{{ $team->position }}', '{{ $team->initials }}')" class="text-xs bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                                 Edit
                             </button>
                             <form action="{{ route('admin.teams.destroy', $team) }}" method="POST" class="inline">
@@ -67,8 +67,7 @@
                         </div>
                     </div>
                     <h3 class="text-lg font-bold uppercase tracking-wide mb-1">{{ $team->name }}</h3>
-                    <p class="text-sm opacity-70 mb-3">{{ $team->position }}</p>
-                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{{ $team->description }}</p>
+                    <p class="text-sm opacity-70">{{ $team->position }}</p>
                 </div>
             @endforeach
         </div>
@@ -112,11 +111,6 @@
             <input type="text" name="initials" id="teamInitials" maxlength="3" class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition uppercase" required>
         </div>
 
-        <div>
-            <label class="text-sm font-bold uppercase tracking-widest opacity-60">Deskripsi</label>
-            <textarea name="description" id="teamDescription" rows="4" class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition resize-none" required></textarea>
-        </div>
-
         <div class="flex flex-col sm:flex-row gap-3 pt-4">
             <button type="button" onclick="document.getElementById('addTeamModal').close()" class="flex-1 border border-zinc-200 dark:border-zinc-800 px-4 py-2 rounded-lg font-bold uppercase tracking-widest text-sm hover:bg-zinc-50 dark:hover:bg-zinc-900 transition">
                 Batal
@@ -144,12 +138,11 @@
         }
     });
 
-    function editTeam(id, name, position, description, initials) {
+    function editTeam(id, name, position, initials) {
         document.getElementById('modalTitle').textContent = 'Edit Tim';
         document.getElementById('teamId').value = id;
         document.getElementById('teamName').value = name;
         document.getElementById('teamPosition').value = position;
-        document.getElementById('teamDescription').value = description;
         document.getElementById('teamInitials').value = initials;
         
         // Reset photo input and preview
