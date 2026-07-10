@@ -29,7 +29,7 @@
                             <p class="text-sm opacity-70 mt-1">Rp {{ number_format((float) $item->price, 0, ',', '.') }}</p>
                         </div>
 
-                        <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">{{ $item->description }}</p>
+                        <p class="text-zinc-600 dark:text-zinc-400 leading-snug whitespace-pre-line">{!! nl2br(e($item->description)) !!}</p>
                     </div>
                 @endforeach
             </div>

@@ -59,7 +59,7 @@
                         </div>
                     </div>
 
-                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{{ $item->description }}</p>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-snug whitespace-pre-line">{!! nl2br(e($item->description)) !!}</p>
                 </div>
             @endforeach
         </div>
