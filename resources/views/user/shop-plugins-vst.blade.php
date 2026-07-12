@@ -36,21 +36,31 @@
                                             $disk = 'public';
                                         }
                                         $imageExists = false;
+                                        $imageSrc = null;
                                         if (!empty($item->image)) {
-                                            try {
-                                                $imageExists = \Illuminate\Support\Facades\Storage::disk($disk)->exists($item->image);
-                                                // if serving via public disk, ensure public/storage link is present and file reachable
-                                                if ($disk === 'public') {
-                                                    $imageExists = $imageExists && file_exists(public_path('storage/' . $item->image));
+                                            // remote URL?
+                                            if (preg_match('/^https?:\/\//i', $item->image)) {
+                                                $imageExists = true;
+                                                $imageSrc = $item->image;
+                                            } else {
+                                                try {
+                                                    $imageExists = \Illuminate\Support\Facades\Storage::disk($disk)->exists($item->image);
+                                                    if ($imageExists && $disk === 'public') {
+                                                        $publicPath = public_path('storage/' . $item->image);
+                                                        $imageExists = $imageExists && file_exists($publicPath);
+                                                    }
+                                                    if ($imageExists) {
+                                                        $imageSrc = \Illuminate\Support\Facades\Storage::url($item->image);
+                                                    }
+                                                } catch (\Exception $e) {
+                                                    $imageExists = false;
                                                 }
-                                            } catch (\Exception $e) {
-                                                $imageExists = false;
                                             }
                                         }
                                     @endphp
 
                                     @if ($imageExists)
-                                        <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}" class="h-44 w-full object-cover transition-transform duration-300 group-hover:scale-105">
+                                        <img src="{{ $imageSrc }}" alt="{{ $item->title }}" class="h-44 w-full object-cover transition-transform duration-300 group-hover:scale-105">
                                     @else
                                         <div class="h-44 w-full flex items-center justify-center text-zinc-400">No image</div>
                                     @endif

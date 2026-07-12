@@ -21,20 +21,12 @@ class PluginController extends Controller
             'title' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image' => 'nullable|url',
         ]);
 
-        $disk = config('filesystems.default') ?? env('FILESYSTEM_DISK', 'public');
-        if ($disk === 'local') {
-            $disk = 'public';
-        }
-
-        if ($request->hasFile('image')) {
-            try {
-                $validated['image'] = $request->file('image')->store('plugins', $disk);
-            } catch (\Exception $e) {
-                return back()->withErrors(['image' => 'Gagal menyimpan gambar: ' . $e->getMessage()]);
-            }
+        // If no image URL provided, set to null
+        if (empty($validated['image'])) {
+            $validated['image'] = null;
         }
 
         Plugin::create($validated);
@@ -55,24 +47,29 @@ class PluginController extends Controller
             'title' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image' => 'nullable|url',
         ]);
 
-        $disk = config('filesystems.default') ?? env('FILESYSTEM_DISK', 'public');
-        if ($disk === 'local') {
-            $disk = 'public';
+        // If image changed from a stored path to a URL, try delete old stored file
+        $oldImage = $plugin->image;
+        $newImage = $validated['image'] ?? null;
+        if ($oldImage && $newImage && !preg_match('/^https?:\/\//i', $oldImage)) {
+            // oldImage looked like a stored path; delete if exists on configured disk
+            $disk = config('filesystems.default') ?? env('FILESYSTEM_DISK', 'public');
+            if ($disk === 'local') {
+                $disk = 'public';
+            }
+            try {
+                if (Storage::disk($disk)->exists($oldImage)) {
+                    Storage::disk($disk)->delete($oldImage);
+                }
+            } catch (\Exception $e) {
+                // ignore deletion errors
+            }
         }
 
-        if ($request->hasFile('image')) {
-            try {
-                // delete old image if exists on the same disk
-                if (!empty($plugin->image) && Storage::disk($disk)->exists($plugin->image)) {
-                    Storage::disk($disk)->delete($plugin->image);
-                }
-                $validated['image'] = $request->file('image')->store('plugins', $disk);
-            } catch (\Exception $e) {
-                return back()->withErrors(['image' => 'Gagal menyimpan gambar: ' . $e->getMessage()]);
-            }
+        if (empty($validated['image'])) {
+            $validated['image'] = null;
         }
 
         $plugin->update($validated);

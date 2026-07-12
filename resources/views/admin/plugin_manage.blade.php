@@ -36,7 +36,7 @@
                         </div>
                         <div class="flex flex-wrap justify-end gap-2">
                             <button
-                                onclick="editPlugin({{ $item->id }}, @js($item->title), @js((string) $item->price), @js($item->description))"
+                                onclick="editPlugin({{ $item->id }}, @js($item->title), @js((string) $item->price), @js($item->description), @js($item->image))"
                                 class="text-xs bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition"
                             >
                                 Edit
@@ -64,7 +64,7 @@
         <button type="button" onclick="document.getElementById('pluginModal').close()" class="text-2xl opacity-50 hover:opacity-100">×</button>
     </div>
 
-    <form id="pluginForm" method="POST" action="{{ route('admin.plugins.store') }}" class="space-y-4" enctype="multipart/form-data">
+    <form id="pluginForm" method="POST" action="{{ route('admin.plugins.store') }}" class="space-y-4">
         @csrf
 
         <div>
@@ -83,9 +83,9 @@
         </div>
 
         <div>
-            <label class="text-sm font-bold uppercase tracking-widest opacity-60">Gambar</label>
-            <input type="file" name="image" id="pluginImage" accept="image/jpeg,image/png,image/jpg,image/webp" class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition">
-            <small class="opacity-60">Format: JPG, PNG, WEBP | Maks: 2MB</small>
+            <label class="text-sm font-bold uppercase tracking-widest opacity-60">Gambar (URL)</label>
+            <input type="url" name="image" id="pluginImage" placeholder="https://example.com/image.jpg" class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition">
+            <small class="opacity-60">Masukkan URL gambar (HTTPS)</small>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-3 pt-4">
@@ -100,11 +100,12 @@
 </dialog>
 
 <script>
-    function editPlugin(id, title, price, description) {
+    function editPlugin(id, title, price, description, image) {
         document.getElementById('pluginModalTitle').textContent = 'Edit Plugin';
         document.getElementById('pluginTitle').value = title;
         document.getElementById('pluginPrice').value = price;
         document.getElementById('pluginDescription').value = description;
+        document.getElementById('pluginImage').value = image || '';
 
         const form = document.getElementById('pluginForm');
         form.action = '{{ route("admin.plugins.update", ":id") }}'.replace(':id', id);
