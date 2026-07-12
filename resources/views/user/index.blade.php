@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'JEM Production | Home')
+@section('title', 'JEM Production')
 
 @section('content')
 <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">

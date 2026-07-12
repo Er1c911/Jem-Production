@@ -29,8 +29,7 @@
         <div class="flex justify-between items-center w-full">
         <a href="{{ route('home') }}" class="inline-flex items-center gap-3 font-display text-xl font-extrabold tracking-tight uppercase hover:opacity-80 transition">
             <span class="inline-flex items-center">
-                <img src="{{ asset('logo/Logo Toogle Terang.png') }}" alt="JEM Logo" class="h-7 w-auto dark:hidden">
-                <img src="{{ asset('logo/Logo Toogle Gelap.png') }}" alt="JEM Logo" class="hidden h-7 w-auto dark:block">
+                <img src="{{ asset('logo/Logo Toogle Gelap.png') }}" alt="JEM Logo" class="h-7 w-auto">
             </span>
             <span>jem<span class="font-light opacity-50">.prod</span></span>
         </a>
