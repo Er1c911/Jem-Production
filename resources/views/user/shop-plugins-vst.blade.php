@@ -31,7 +31,7 @@
                             <div class="flex flex-col sm:flex-row">
                                 <div class="sm:w-1/3 w-full bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
                                     @if (!empty($item->image))
-                                        <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}" class="h-44 w-full object-cover transition-transform duration-300 group-hover:scale-105">
+                                        <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}" class="h-44 w-full object-cover transition-transform duration-300 group-hover:scale-105">
                                     @else
                                         <div class="h-44 w-full flex items-center justify-center text-zinc-400">No image</div>
                                     @endif

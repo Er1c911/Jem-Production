@@ -1,6 +1,6 @@
 @php
     // Accepts either $videoUrl or $videoPath (storage path) or both.
-    $src = $videoUrl ?? (isset($videoPath) ? asset('storage/' . $videoPath) : null);
+    $src = $videoUrl ?? (isset($videoPath) ? Storage::url($videoPath) : null);
 
     $isYoutube = $src && (str_contains($src, 'youtube.com') || str_contains($src, 'youtu.be'));
     $isGoogleDrive = $src && str_contains($src, 'drive.google.com');
