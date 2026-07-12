@@ -45,7 +45,7 @@
 
                                     <div class="flex items-center justify-between">
                                         <div>
-                                            <p class="text-sm font-semibold opacity-70">DAW</p>
+                                        
                                             <p class="mt-1 text-lg font-bold">Rp {{ number_format((float) $item->price, 0, ',', '.') }}</p>
                                         </div>
 
