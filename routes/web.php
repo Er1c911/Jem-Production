@@ -8,6 +8,7 @@ use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\SequencerController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\PluginController;
 
 // Halaman Utama (User) - Publik
 Route::get('/', function () {
@@ -25,9 +26,7 @@ Route::get('/shop', function () {
     return view('user.shop');
 })->name('shop');
 
-Route::get('/shop/plugins-vst', function () {
-    return view('user.shop-plugins-vst');
-})->name('shop.plugins-vst');
+Route::get('/shop/plugins-vst', [PluginController::class, 'userPlugins'])->name('shop.plugins-vst');
 
 Route::get('/shop/sequencer', [SequencerController::class, 'userSequencer'])->name('shop.sequencer');
 
@@ -101,6 +100,11 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::post('/sequencer', [SequencerController::class, 'store'])->name('admin.sequencer.store');
     Route::put('/sequencer/{sequencer}', [SequencerController::class, 'update'])->name('admin.sequencer.update');
     Route::delete('/sequencer/{sequencer}', [SequencerController::class, 'destroy'])->name('admin.sequencer.destroy');
+
+    Route::get('/plugins', [PluginController::class, 'index'])->name('admin.plugins.index');
+    Route::post('/plugins', [PluginController::class, 'store'])->name('admin.plugins.store');
+    Route::put('/plugins/{plugin}', [PluginController::class, 'update'])->name('admin.plugins.update');
+    Route::delete('/plugins/{plugin}', [PluginController::class, 'destroy'])->name('admin.plugins.destroy');
 
     // Teams Management
     Route::resource('teams', TeamsController::class, [
