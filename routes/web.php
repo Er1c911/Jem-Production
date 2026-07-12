@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\SequencerController;
+use App\Http\Controllers\CartController;
 
 // Halaman Utama (User) - Publik
 Route::get('/', function () {
@@ -29,6 +30,10 @@ Route::get('/shop/plugins-vst', function () {
 })->name('shop.plugins-vst');
 
 Route::get('/shop/sequencer', [SequencerController::class, 'userSequencer'])->name('shop.sequencer');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
 Route::get('/team-photo', function (Request $request) {
     $path = $request->query('path');
