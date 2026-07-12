@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="max-w-6xl mx-auto w-full space-y-6">
-    <a href="{{ route('shop') }}" class="inline-flex items-center text-sm font-semibold tracking-wide opacity-70 hover:opacity-100 transition">&larr; Kembali ke Shop</a>
+    <a href="{{ route('shop') }}" class="inline-flex items-center text-sm font-semibold tracking-wide opacity-70 hover:opacity-100 transition">&larr; Back to Shop</a>
 
     <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 md:p-10">
         <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -22,7 +22,7 @@
 
         @if (empty($cart['items']))
             <div class="mt-8 rounded-2xl border border-dashed border-zinc-300 dark:border-zinc-700 p-8 text-center text-zinc-600 dark:text-zinc-400">
-                Keranjang Anda masih kosong.
+                Your cart is empty.
             </div>
         @else
             <div class="mt-8 space-y-4">
