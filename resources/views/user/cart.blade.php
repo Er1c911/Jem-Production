@@ -9,7 +9,10 @@
     <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 md:p-10">
         <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
-                <h1 class="font-display text-4xl sm:text-5xl font-black tracking-tight leading-[0.95] uppercase">Chart</h1>
+                <div class="mb-4">
+                    <img src="{{ asset('logo/Logo Toogle Terang.png') }}" alt="JEM Logo" class="h-16 w-auto dark:hidden">
+                    <img src="{{ asset('logo/Logo Toogle Gelap.png') }}" alt="JEM Logo" class="hidden h-16 w-auto dark:block">
+                </div>
                 <p class="mt-3 text-zinc-600 dark:text-zinc-400">List of items</p>
             </div>
             <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 px-4 py-3 text-sm">
