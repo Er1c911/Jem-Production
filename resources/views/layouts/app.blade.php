@@ -37,12 +37,12 @@
 
         <div class="hidden md:flex items-center gap-8">
             <nav class="flex gap-6 text-sm font-medium tracking-wide">
-                <a href="{{ route('home') }}" class="hover:underline underline-offset-4">Home</a>
-                <a href="{{ route('teams') }}" class="hover:underline underline-offset-4">Teams</a>
-                <a href="{{ route('portfolio') }}" class="hover:underline underline-offset-4">Portofolio</a>
-                <a href="{{ route('shop') }}" class="hover:underline underline-offset-4">Shop</a>
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-black dark:text-white font-semibold underline decoration-2 underline-offset-4' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:underline underline-offset-4' }}">Home</a>
+                <a href="{{ route('teams') }}" class="{{ request()->routeIs('teams') ? 'text-black dark:text-white font-semibold underline decoration-2 underline-offset-4' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:underline underline-offset-4' }}">Teams</a>
+                <a href="{{ route('portfolio') }}" class="{{ request()->routeIs('portfolio') ? 'text-black dark:text-white font-semibold underline decoration-2 underline-offset-4' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:underline underline-offset-4' }}">Portofolio</a>
+                <a href="{{ route('shop') }}" class="{{ request()->routeIs('shop*') ? 'text-black dark:text-white font-semibold underline decoration-2 underline-offset-4' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:underline underline-offset-4' }}">Shop</a>
                 @auth
-                    <a href="{{ route('admin.dashboard') }}" class="hover:underline underline-offset-4">Dashboard</a>
+                    <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'text-black dark:text-white font-semibold underline decoration-2 underline-offset-4' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:underline underline-offset-4' }}">Dashboard</a>
                     <form action="{{ route('logout') }}" method="POST" class="inline">
                         @csrf
                         <button type="submit" class="opacity-60 hover:opacity-100 transition">Logout</button>
@@ -68,12 +68,12 @@
         </div>
 
         <nav id="mobile-menu" class="md:hidden hidden mt-4 border-t border-zinc-200 dark:border-zinc-800 pt-4 space-y-3 text-sm font-medium tracking-wide">
-            <a href="{{ route('home') }}" class="block py-1">Home</a>
-            <a href="{{ route('teams') }}" class="block py-1">Teams</a>
-            <a href="{{ route('portfolio') }}" class="block py-1">Portofolio</a>
-            <a href="{{ route('shop') }}" class="block py-1">Shop</a>
+            <a href="{{ route('home') }}" class="block py-1 {{ request()->routeIs('home') ? 'text-black dark:text-white font-semibold' : 'text-zinc-600 dark:text-zinc-400' }}">Home</a>
+            <a href="{{ route('teams') }}" class="block py-1 {{ request()->routeIs('teams') ? 'text-black dark:text-white font-semibold' : 'text-zinc-600 dark:text-zinc-400' }}">Teams</a>
+            <a href="{{ route('portfolio') }}" class="block py-1 {{ request()->routeIs('portfolio') ? 'text-black dark:text-white font-semibold' : 'text-zinc-600 dark:text-zinc-400' }}">Portofolio</a>
+            <a href="{{ route('shop') }}" class="block py-1 {{ request()->routeIs('shop*') ? 'text-black dark:text-white font-semibold' : 'text-zinc-600 dark:text-zinc-400' }}">Shop</a>
             @auth
-                <a href="{{ route('admin.dashboard') }}" class="block py-1">Dashboard</a>
+                <a href="{{ route('admin.dashboard') }}" class="block py-1 {{ request()->routeIs('admin.dashboard') ? 'text-black dark:text-white font-semibold' : 'text-zinc-600 dark:text-zinc-400' }}">Dashboard</a>
                 <form action="{{ route('logout') }}" method="POST" class="block">
                     @csrf
                     <button type="submit" class="py-1 opacity-60 hover:opacity-100 transition">Logout</button>
