@@ -30,7 +30,26 @@
                         <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-0 overflow-hidden bg-white dark:bg-zinc-900 shadow-sm group transform transition hover:-translate-y-1 hover:shadow-lg">
                             <div class="flex flex-col sm:flex-row">
                                 <div class="sm:w-1/3 w-full bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
-                                    @if (!empty($item->image))
+                                    @php
+                                        $disk = config('filesystems.default') ?? env('FILESYSTEM_DISK', 'local');
+                                        if ($disk === 'local') {
+                                            $disk = 'public';
+                                        }
+                                        $imageExists = false;
+                                        if (!empty($item->image)) {
+                                            try {
+                                                $imageExists = \Illuminate\Support\Facades\Storage::disk($disk)->exists($item->image);
+                                                // if serving via public disk, ensure public/storage link is present and file reachable
+                                                if ($disk === 'public') {
+                                                    $imageExists = $imageExists && file_exists(public_path('storage/' . $item->image));
+                                                }
+                                            } catch (\Exception $e) {
+                                                $imageExists = false;
+                                            }
+                                        }
+                                    @endphp
+
+                                    @if ($imageExists)
                                         <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}" class="h-44 w-full object-cover transition-transform duration-300 group-hover:scale-105">
                                     @else
                                         <div class="h-44 w-full flex items-center justify-center text-zinc-400">No image</div>
