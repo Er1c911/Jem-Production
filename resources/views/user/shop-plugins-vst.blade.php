@@ -7,19 +7,19 @@
     <div class="space-y-6">
         <a href="{{ route('shop') }}" class="inline-flex items-center text-sm font-semibold tracking-wide opacity-70 hover:opacity-100 transition">&larr; Back to Shop</a>
 
-        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 md:p-10">
-            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div>
-                    <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[0.95] uppercase">Plugins &amp; VST</h1>
-                    <p class="mt-4 text-lg md:text-xl font-light text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed">
-                        Plugins & VST catalog from JEM Production.
-                    </p>
-                </div>
-                <a href="{{ route('cart.index') }}" class="inline-flex items-center justify-center rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold hover:border-black dark:border-zinc-700 dark:hover:border-white transition">
-                    View Chart
-                </a>
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+                <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[0.95] uppercase">Plugins &amp; VST</h1>
+                <p class="mt-4 text-lg md:text-xl font-light text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed">
+                    Plugins & VST catalog from JEM Production.
+                </p>
             </div>
+            <a href="{{ route('cart.index') }}" class="inline-flex items-center justify-center rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold hover:border-black dark:border-zinc-700 dark:hover:border-white transition">
+                View Chart
+            </a>
+        </div>
 
+        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 md:p-10">
             @if ($plugins->isEmpty())
                 <div class="mt-8 rounded-2xl border border-dashed border-zinc-300 dark:border-zinc-700 p-8 text-center text-zinc-600 dark:text-zinc-400">
                     Belum ada plugin yang tersedia.
