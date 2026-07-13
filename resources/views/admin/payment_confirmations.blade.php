@@ -66,8 +66,9 @@
 
                     <div class="flex flex-wrap items-center gap-3">
                         @if ($payment->status === 'pending')
-                            <form action="{{ route('admin.payments.accept', $payment) }}" method="POST">
+                            <form action="{{ route('admin.payments.acceptById') }}" method="POST">
                                 @csrf
+                                <input type="hidden" name="payment_id" value="{{ $payment->id }}">
                                 <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-black px-4 py-2 text-sm font-semibold text-white hover:opacity-90 dark:bg-white dark:text-black transition">
                                     Accepted
                                 </button>

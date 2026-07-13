@@ -33,8 +33,35 @@ class PaymentConfirmationController extends Controller
         return view('admin.payment_confirmations', compact('payments', 'pendingCount'));
     }
 
+    public function acceptById(Request $request)
+    {
+        $validated = $request->validate([
+            'payment_id' => 'required|integer',
+        ]);
+
+        $payment = PaymentConfirmation::find((int) $validated['payment_id']);
+        if (! $payment) {
+            return back()->withErrors([
+                'payment' => 'Data pembayaran tidak ditemukan.',
+            ]);
+        }
+
+        return $this->processAccept($payment);
+    }
+
     public function accept(PaymentConfirmation $payment)
     {
+        return $this->processAccept($payment);
+    }
+
+    private function processAccept(PaymentConfirmation $payment)
+    {
+        if (! $this->isTransactionalMailConfigured()) {
+            return back()->withErrors([
+                'payment' => 'Email belum aktif di server (mailer masih log/array). Atur SMTP terlebih dahulu.',
+            ]);
+        }
+
         if ($payment->status !== 'pending') {
             return back()->withErrors([
                 'payment' => 'Pembayaran ini sudah diproses sebelumnya.',
@@ -74,6 +101,12 @@ class PaymentConfirmationController extends Controller
 
     public function cancel(Request $request, PaymentConfirmation $payment)
     {
+        if (! $this->isTransactionalMailConfigured()) {
+            return back()->withErrors([
+                'payment' => 'Email belum aktif di server (mailer masih log/array). Atur SMTP terlebih dahulu.',
+            ]);
+        }
+
         if ($payment->status !== 'pending') {
             return back()->withErrors([
                 'payment' => 'Pembayaran ini sudah diproses sebelumnya.',
@@ -233,5 +266,12 @@ class PaymentConfirmationController extends Controller
         }
 
         return (int) $matches[1];
+    }
+
+    private function isTransactionalMailConfigured(): bool
+    {
+        $mailer = (string) config('mail.default', 'log');
+
+        return ! in_array($mailer, ['log', 'array'], true);
     }
 }

@@ -102,6 +102,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     })->name('admin.dashboard');
 
     Route::get('/payments', [PaymentConfirmationController::class, 'index'])->name('admin.payments.index');
+    Route::post('/payments/accept', [PaymentConfirmationController::class, 'acceptById'])->name('admin.payments.acceptById');
     Route::post('/payments/{payment}/accept', [PaymentConfirmationController::class, 'accept'])->name('admin.payments.accept');
     Route::post('/payments/{payment}/cancel', [PaymentConfirmationController::class, 'cancel'])->name('admin.payments.cancel');
     Route::delete('/payments/{payment}', [PaymentConfirmationController::class, 'destroy'])->name('admin.payments.destroy');
