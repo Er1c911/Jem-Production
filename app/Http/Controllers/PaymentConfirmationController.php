@@ -56,7 +56,9 @@ class PaymentConfirmationController extends Controller
 
     private function processAccept(PaymentConfirmation $payment)
     {
-        if (! $this->isTransactionalMailConfigured()) {
+        $mailer = $this->resolveTransactionalMailer();
+
+        if ($mailer === null) {
             return back()->withErrors([
                 'payment' => 'Email belum aktif di server (mailer masih log/array). Atur SMTP terlebih dahulu.',
             ]);
@@ -69,7 +71,7 @@ class PaymentConfirmationController extends Controller
         }
 
         try {
-            DB::transaction(function () use ($payment) {
+            DB::transaction(function () use ($payment, $mailer) {
                 $itemsWithLinks = $this->enrichPurchasedItems($payment->items ?? []);
 
                 $payment->update([
@@ -79,7 +81,7 @@ class PaymentConfirmationController extends Controller
                     'accepted_by' => Auth::id(),
                 ]);
 
-                Mail::to($payment->customer_email)->send(new PurchaseItemsDelivered(
+                Mail::mailer($mailer)->to($payment->customer_email)->send(new PurchaseItemsDelivered(
                     items: $itemsWithLinks,
                     customerEmail: $payment->customer_email,
                     totalAmount: (float) $payment->total_amount,
@@ -101,7 +103,9 @@ class PaymentConfirmationController extends Controller
 
     public function cancel(Request $request, PaymentConfirmation $payment)
     {
-        if (! $this->isTransactionalMailConfigured()) {
+        $mailer = $this->resolveTransactionalMailer();
+
+        if ($mailer === null) {
             return back()->withErrors([
                 'payment' => 'Email belum aktif di server (mailer masih log/array). Atur SMTP terlebih dahulu.',
             ]);
@@ -118,7 +122,7 @@ class PaymentConfirmationController extends Controller
         ]);
 
         try {
-            DB::transaction(function () use ($payment, $validated) {
+            DB::transaction(function () use ($payment, $validated, $mailer) {
                 $payment->update([
                     'status' => 'cancelled',
                     'cancel_reason' => $validated['cancel_reason'],
@@ -126,7 +130,7 @@ class PaymentConfirmationController extends Controller
                     'cancelled_by' => Auth::id(),
                 ]);
 
-                Mail::to($payment->customer_email)->send(new PaymentCancelledNotice(
+                Mail::mailer($mailer)->to($payment->customer_email)->send(new PaymentCancelledNotice(
                     payment: $payment->fresh(),
                     cancelReason: $validated['cancel_reason'],
                 ));
@@ -181,13 +185,24 @@ class PaymentConfirmationController extends Controller
             'status' => 'pending',
         ]);
 
+        $mailer = $this->resolveTransactionalMailer();
+
         try {
-            Mail::to((string) config('payment.notification_email', 'jem.production26@gmail.com'))
-                ->send(new AdminPaymentSubmitted($payment));
+            if ($mailer !== null) {
+                Mail::mailer($mailer)
+                    ->to((string) config('payment.notification_email', 'jem.production26@gmail.com'))
+                    ->send(new AdminPaymentSubmitted($payment));
+            }
         } catch (\Throwable $e) {
             Log::error('Send admin payment notification failed', [
                 'payment_id' => $payment->id,
                 'message' => $e->getMessage(),
+            ]);
+        }
+
+        if ($mailer === null) {
+            Log::warning('Admin payment notification skipped because SMTP is not configured', [
+                'payment_id' => $payment->id,
             ]);
         }
 
@@ -268,10 +283,23 @@ class PaymentConfirmationController extends Controller
         return (int) $matches[1];
     }
 
-    private function isTransactionalMailConfigured(): bool
+    private function resolveTransactionalMailer(): ?string
     {
-        $mailer = (string) config('mail.default', 'log');
+        $defaultMailer = (string) config('mail.default', 'log');
 
-        return ! in_array($mailer, ['log', 'array'], true);
+        if (! in_array($defaultMailer, ['log', 'array'], true)) {
+            return $defaultMailer;
+        }
+
+        $smtpHost = (string) config('mail.mailers.smtp.host', '');
+        $smtpPort = (int) config('mail.mailers.smtp.port', 0);
+        $smtpUsername = (string) config('mail.mailers.smtp.username', '');
+        $smtpPassword = (string) config('mail.mailers.smtp.password', '');
+
+        if ($smtpHost === '' || $smtpPort <= 0 || $smtpUsername === '' || $smtpPassword === '') {
+            return null;
+        }
+
+        return 'smtp';
     }
 }
