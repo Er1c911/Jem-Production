@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Storage;
 
 class PaymentConfirmationController extends Controller
 {
+    private function isVercel(): bool
+    {
+        return (bool) env('VERCEL');
+    }
+
     public function index()
     {
         $payments = PaymentConfirmation::orderByRaw("CASE WHEN status = 'pending' THEN 0 ELSE 1 END")
@@ -109,10 +114,17 @@ class PaymentConfirmationController extends Controller
 
     public function storeFromCart(Request $request)
     {
-        $validated = $request->validate([
+        $rules = [
             'email' => 'required|email|max:255',
-            'payment_proof' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
-        ]);
+        ];
+
+        if ($this->isVercel()) {
+            $rules['proof_url'] = 'required|url|max:2048';
+        } else {
+            $rules['payment_proof'] = 'required|image|mimes:jpg,jpeg,png,webp|max:5120';
+        }
+
+        $validated = $request->validate($rules);
 
         $cart = session('cart', ['items' => [], 'total' => 0]);
         $items = $cart['items'] ?? [];
@@ -123,7 +135,9 @@ class PaymentConfirmationController extends Controller
             ])->withInput();
         }
 
-        $proofPath = $request->file('payment_proof')->store('payments/proofs', 'public');
+        $proofPath = $this->isVercel()
+            ? (string) ($validated['proof_url'] ?? '')
+            : $request->file('payment_proof')->store('payments/proofs', 'public');
         $itemsWithLinks = $this->enrichPurchasedItems(array_values($items));
 
         $payment = PaymentConfirmation::create([
@@ -155,7 +169,10 @@ class PaymentConfirmationController extends Controller
     public function destroy(PaymentConfirmation $payment)
     {
         try {
-            if (! empty($payment->payment_proof_path) && Storage::disk('public')->exists($payment->payment_proof_path)) {
+            $isExternalProofUrl = ! empty($payment->payment_proof_path)
+                && preg_match('/^https?:\/\//i', $payment->payment_proof_path) === 1;
+
+            if (! $isExternalProofUrl && ! empty($payment->payment_proof_path) && Storage::disk('public')->exists($payment->payment_proof_path)) {
                 Storage::disk('public')->delete($payment->payment_proof_path);
             }
 

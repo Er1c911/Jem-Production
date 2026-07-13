@@ -56,7 +56,12 @@
 
                     <div class="flex flex-wrap items-center gap-3 text-sm">
                         <span class="font-semibold">Total: Rp {{ number_format((float) $payment->total_amount, 0, ',', '.') }}</span>
-                        <a href="{{ asset('storage/' . $payment->payment_proof_path) }}" target="_blank" rel="noopener noreferrer" class="underline underline-offset-4">Lihat bukti pembayaran</a>
+                        @php
+                            $proofUrl = preg_match('/^https?:\/\//i', (string) $payment->payment_proof_path)
+                                ? (string) $payment->payment_proof_path
+                                : asset('storage/' . $payment->payment_proof_path);
+                        @endphp
+                        <a href="{{ $proofUrl }}" target="_blank" rel="noopener noreferrer" class="underline underline-offset-4">Lihat bukti pembayaran</a>
                     </div>
 
                     <div class="flex flex-wrap items-center gap-3">

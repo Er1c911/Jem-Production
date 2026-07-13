@@ -101,20 +101,39 @@
                         <p class="mt-3 text-center text-sm font-semibold">Nominal Bayar: Rp {{ number_format((float) ($cart['total'] ?? 0), 0, ',', '.') }}</p>
                     </div>
 
-                    <div>
-                        <label for="payment_proof" class="mb-2 block text-sm font-semibold">Upload bukti pembayaran</label>
-                        <input
-                            id="payment_proof"
-                            name="payment_proof"
-                            type="file"
-                            accept="image/png,image/jpeg,image/webp"
-                            required
-                            class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-black dark:border-zinc-700 dark:bg-zinc-950 dark:focus:border-white"
-                        >
-                        @error('payment_proof')
-                            <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    @if (env('VERCEL'))
+                        <div>
+                            <label for="proof_url" class="mb-2 block text-sm font-semibold">Link bukti pembayaran</label>
+                            <input
+                                id="proof_url"
+                                name="proof_url"
+                                type="url"
+                                value="{{ old('proof_url') }}"
+                                required
+                                placeholder="https://..."
+                                class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-black dark:border-zinc-700 dark:bg-zinc-950 dark:focus:border-white"
+                            >
+                            <p class="mt-2 text-xs text-zinc-500 dark:text-zinc-400">Di Vercel, upload file lokal tidak didukung. Gunakan link gambar bukti pembayaran (Drive, Imgur, dll).</p>
+                            @error('proof_url')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @else
+                        <div>
+                            <label for="payment_proof" class="mb-2 block text-sm font-semibold">Upload bukti pembayaran</label>
+                            <input
+                                id="payment_proof"
+                                name="payment_proof"
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp"
+                                required
+                                class="w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-black dark:border-zinc-700 dark:bg-zinc-950 dark:focus:border-white"
+                            >
+                            @error('payment_proof')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
 
                     <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-500 transition">
                         Konfirmasi Pembayaran

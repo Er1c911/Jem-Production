@@ -37,8 +37,13 @@
         </tbody>
     </table>
 
+    @php
+        $proofUrl = preg_match('/^https?:\/\//i', (string) $payment->payment_proof_path)
+            ? (string) $payment->payment_proof_path
+            : asset('storage/' . $payment->payment_proof_path);
+    @endphp
     <p>
-        <a href="{{ asset('storage/' . $payment->payment_proof_path) }}" target="_blank" rel="noopener noreferrer">Lihat bukti pembayaran</a>
+        <a href="{{ $proofUrl }}" target="_blank" rel="noopener noreferrer">Lihat bukti pembayaran</a>
     </p>
     <p>
         <a href="{{ route('admin.payments.index') }}" target="_blank" rel="noopener noreferrer">Buka halaman admin payments</a>
