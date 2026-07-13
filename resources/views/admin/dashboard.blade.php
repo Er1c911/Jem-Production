@@ -17,6 +17,15 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a href="{{ route('admin.payments.index') }}" class="group bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 p-8 rounded-2xl shadow-sm hover:border-black dark:hover:border-white transition duration-300 flex flex-col justify-between">
+            <div>
+                <div class="text-xs uppercase tracking-widest font-bold opacity-40">Notification</div>
+                <div class="font-display text-3xl font-black tracking-tight mt-4">Pembayaran</div>
+                <p class="text-sm mt-2 text-zinc-500 dark:text-zinc-400">Pending: <span class="font-semibold text-black dark:text-white">{{ $pendingPaymentCount ?? 0 }}</span></p>
+            </div>
+            <span class="text-xs font-medium text-zinc-500 mt-6 group-hover:text-black dark:group-hover:text-white transition">Lihat konfirmasi pembayaran →</span>
+        </a>
+
         <a href="{{ route('admin.teams.index') }}" class="group bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 p-8 rounded-2xl shadow-sm hover:border-black dark:hover:border-white transition duration-300 flex flex-col justify-between">
             <div>
                 <div class="text-xs uppercase tracking-widest font-bold opacity-40">Management</div>

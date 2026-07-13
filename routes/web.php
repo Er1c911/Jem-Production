@@ -9,6 +9,8 @@ use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\SequencerController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PluginController;
+use App\Http\Controllers\PaymentConfirmationController;
+use App\Models\PaymentConfirmation;
 
 // Halaman Utama (User) - Publik
 Route::get('/', function () {
@@ -33,6 +35,7 @@ Route::get('/shop/sequencer', [SequencerController::class, 'userSequencer'])->na
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/buy', [PaymentConfirmationController::class, 'storeFromCart'])->name('cart.buy');
 
 Route::get('/team-photo', function (Request $request) {
     $path = $request->query('path');
@@ -93,8 +96,15 @@ Route::post('/logout', function (Request $request) {
 // Dashboard Admin (Diproteksi Middleware Auth)
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
-        return view('admin.dashboard');
+        $pendingPaymentCount = PaymentConfirmation::where('status', 'pending')->count();
+
+        return view('admin.dashboard', compact('pendingPaymentCount'));
     })->name('admin.dashboard');
+
+    Route::get('/payments', [PaymentConfirmationController::class, 'index'])->name('admin.payments.index');
+    Route::post('/payments/{payment}/accept', [PaymentConfirmationController::class, 'accept'])->name('admin.payments.accept');
+    Route::post('/payments/{payment}/cancel', [PaymentConfirmationController::class, 'cancel'])->name('admin.payments.cancel');
+    Route::delete('/payments/{payment}', [PaymentConfirmationController::class, 'destroy'])->name('admin.payments.destroy');
 
     Route::get('/sequencer', [SequencerController::class, 'index'])->name('admin.sequencer.index');
     Route::post('/sequencer', [SequencerController::class, 'store'])->name('admin.sequencer.store');

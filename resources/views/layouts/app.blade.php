@@ -42,7 +42,14 @@
                 <a href="{{ route('portfolio') }}" class="{{ request()->routeIs('portfolio') ? 'text-black dark:text-white font-semibold underline decoration-2 underline-offset-4' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:underline underline-offset-4' }}">Portofolio</a>
                 <a href="{{ route('shop') }}" class="{{ request()->routeIs('shop*') ? 'text-black dark:text-white font-semibold underline decoration-2 underline-offset-4' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:underline underline-offset-4' }}">Shop</a>
                 @auth
+                    @php
+                        $pendingPaymentsCount = 0;
+                        if (\Illuminate\Support\Facades\Schema::hasTable('payment_confirmations')) {
+                            $pendingPaymentsCount = \App\Models\PaymentConfirmation::where('status', 'pending')->count();
+                        }
+                    @endphp
                     <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'text-black dark:text-white font-semibold underline decoration-2 underline-offset-4' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:underline underline-offset-4' }}">Dashboard</a>
+                    <a href="{{ route('admin.payments.index') }}" class="{{ request()->routeIs('admin.payments.*') ? 'text-black dark:text-white font-semibold underline decoration-2 underline-offset-4' : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:underline underline-offset-4' }}">Payments @if($pendingPaymentsCount > 0)<span class="ml-1 rounded-full bg-amber-200 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">{{ $pendingPaymentsCount }}</span>@endif</a>
                     <form action="{{ route('logout') }}" method="POST" class="inline">
                         @csrf
                         <button type="submit" class="opacity-60 hover:opacity-100 transition">Logout</button>
@@ -73,7 +80,14 @@
             <a href="{{ route('portfolio') }}" class="block py-1 {{ request()->routeIs('portfolio') ? 'text-black dark:text-white font-semibold' : 'text-zinc-600 dark:text-zinc-400' }}">Portofolio</a>
             <a href="{{ route('shop') }}" class="block py-1 {{ request()->routeIs('shop*') ? 'text-black dark:text-white font-semibold' : 'text-zinc-600 dark:text-zinc-400' }}">Shop</a>
             @auth
+                @php
+                    $pendingPaymentsCount = 0;
+                    if (\Illuminate\Support\Facades\Schema::hasTable('payment_confirmations')) {
+                        $pendingPaymentsCount = \App\Models\PaymentConfirmation::where('status', 'pending')->count();
+                    }
+                @endphp
                 <a href="{{ route('admin.dashboard') }}" class="block py-1 {{ request()->routeIs('admin.dashboard') ? 'text-black dark:text-white font-semibold' : 'text-zinc-600 dark:text-zinc-400' }}">Dashboard</a>
+                <a href="{{ route('admin.payments.index') }}" class="block py-1 {{ request()->routeIs('admin.payments.*') ? 'text-black dark:text-white font-semibold' : 'text-zinc-600 dark:text-zinc-400' }}">Payments @if($pendingPaymentsCount > 0)<span class="ml-1 rounded-full bg-amber-200 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">{{ $pendingPaymentsCount }}</span>@endif</a>
                 <form action="{{ route('logout') }}" method="POST" class="block">
                     @csrf
                     <button type="submit" class="py-1 opacity-60 hover:opacity-100 transition">Logout</button>

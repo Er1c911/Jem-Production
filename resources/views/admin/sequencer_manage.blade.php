@@ -44,7 +44,7 @@
                         </div>
                         <div class="flex flex-wrap justify-end gap-2">
                             <button
-                                onclick="editSequencer({{ $item->id }}, @js($item->title), @js((string) $item->price), @js($item->description), @js($item->video_url))"
+                                onclick="editSequencer({{ $item->id }}, @js($item->title), @js((string) $item->price), @js($item->description), @js($item->video_url), @js($item->sequencer_link))"
                                 class="text-xs bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition"
                             >
                                 Edit
@@ -60,6 +60,14 @@
                     </div>
 
                     <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-tight whitespace-pre-line">{!! nl2br(e($item->description)) !!}</p>
+
+                    @if (!empty($item->sequencer_link))
+                        <div class="mt-4">
+                            <a href="{{ $item->sequencer_link }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-xs font-semibold underline underline-offset-4">
+                                Link Sequencer
+                            </a>
+                        </div>
+                    @endif
                 </div>
             @endforeach
         </div>
@@ -96,6 +104,12 @@
             <small class="opacity-60">Gunakan link direct video (mis. CDN, Cloudinary, S3/R2 object URL).</small>
         </div>
 
+        <div>
+            <label class="text-sm font-bold uppercase tracking-widest opacity-60">Link Sequencer</label>
+            <input type="url" name="sequencer_link" id="sequencerLink" placeholder="https://..." class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition">
+            <small class="opacity-60">Link ini hanya ditampilkan di halaman admin.</small>
+        </div>
+
         @if (!env('VERCEL'))
         <div>
             <label class="text-sm font-bold uppercase tracking-widest opacity-60">Upload Video</label>
@@ -120,12 +134,13 @@
 </dialog>
 
 <script>
-    function editSequencer(id, title, price, description, videoUrl) {
+    function editSequencer(id, title, price, description, videoUrl, sequencerLink) {
         document.getElementById('sequencerModalTitle').textContent = 'Edit Sequencer';
         document.getElementById('sequencerTitle').value = title;
         document.getElementById('sequencerPrice').value = price;
         document.getElementById('sequencerDescription').value = description;
         document.getElementById('sequencerVideoUrl').value = videoUrl ?? '';
+        document.getElementById('sequencerLink').value = sequencerLink ?? '';
         const fileInput = document.getElementById('sequencerVideo');
         if (fileInput) {
             fileInput.value = '';

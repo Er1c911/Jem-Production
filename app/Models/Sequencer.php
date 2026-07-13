@@ -15,6 +15,7 @@ class Sequencer extends Model
         'description',
         'video_path',
         'video_url',
+        'sequencer_link',
     ];
 
     protected $casts = [

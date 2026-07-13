@@ -30,6 +30,7 @@ class SequencerController extends Controller
             'description' => 'required|string',
             'video' => 'nullable|file|mimetypes:video/mp4,video/webm,video/quicktime|max:'.$maxVideoKb,
             'video_url' => 'nullable|url|max:2048',
+            'sequencer_link' => 'nullable|url|max:2048',
         ]);
 
         if ($this->isVercel() && $request->hasFile('video')) {
@@ -66,6 +67,7 @@ class SequencerController extends Controller
             'description' => 'required|string',
             'video' => 'nullable|file|mimetypes:video/mp4,video/webm,video/quicktime|max:'.$maxVideoKb,
             'video_url' => 'nullable|url|max:2048',
+            'sequencer_link' => 'nullable|url|max:2048',
         ]);
 
         if ($this->isVercel() && $request->hasFile('video')) {

@@ -3,14 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\QrisService;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index(QrisService $qrisService)
     {
         $cart = session('cart', ['items' => [], 'total' => 0]);
 
-        return view('user.cart', compact('cart'));
+        $qrisSvg = null;
+        $qrisPayload = null;
+        $bankTransfer = [
+            'bank_name' => (string) config('payment.bank.name'),
+            'account_name' => (string) config('payment.bank.account_name'),
+            'account_number' => (string) config('payment.bank.account_number'),
+        ];
+
+        $totalAmount = (float) ($cart['total'] ?? 0);
+        if ($totalAmount > 0) {
+            $qrisPayloadFile = (string) config('payment.qris_payload_file', 'pay/qris.txt');
+            $staticPayload = $qrisService->loadStaticPayloadFromFile(public_path($qrisPayloadFile));
+
+            if ($staticPayload !== null) {
+                $qrisPayload = $qrisService->buildDynamicPayload($staticPayload, $totalAmount);
+                $qrisSvg = $qrisService->renderSvg($qrisPayload, 320);
+            }
+        }
+
+        return view('user.cart', compact('cart', 'qrisSvg', 'qrisPayload', 'bankTransfer'));
     }
 
     public function add(Request $request)
@@ -77,5 +97,31 @@ class CartController extends Controller
         ]);
 
         return back()->with('success', 'Item berhasil dihapus dari keranjang.');
+    }
+
+    public function buy(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $cart = session('cart', ['items' => [], 'total' => 0]);
+        $items = $cart['items'] ?? [];
+
+        if (empty($items)) {
+            return back()->withErrors([
+                'email' => 'Keranjang masih kosong. Tambahkan item terlebih dahulu.',
+            ])->withInput();
+        }
+
+        session()->put('cart', [
+            'items' => [],
+            'total' => 0,
+        ]);
+
+        return redirect()->route('cart.index')->with(
+            'success',
+            'Pembelian berhasil diproses untuk email ' . $validated['email'] . '.'
+        );
     }
 }
