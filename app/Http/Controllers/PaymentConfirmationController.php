@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class PaymentConfirmationController extends Controller
 {
@@ -117,12 +118,26 @@ class PaymentConfirmationController extends Controller
             ]);
         }
 
+        $recipientEmail = strtolower(trim((string) $payment->customer_email));
+
+        $recipientValidation = Validator::make([
+            'email' => $recipientEmail,
+        ], [
+            'email' => 'required|email:rfc,dns|max:255',
+        ]);
+
+        if ($recipientValidation->fails()) {
+            return back()->withErrors([
+                'payment' => 'Email pembeli tidak valid. Periksa data pembayaran user terlebih dahulu.',
+            ]);
+        }
+
         $validated = $request->validate([
             'cancel_reason' => 'required|string|max:1000',
         ]);
 
         try {
-            DB::transaction(function () use ($payment, $validated, $mailer) {
+            DB::transaction(function () use ($payment, $validated, $mailer, $recipientEmail) {
                 $payment->update([
                     'status' => 'cancelled',
                     'cancel_reason' => $validated['cancel_reason'],
@@ -130,14 +145,22 @@ class PaymentConfirmationController extends Controller
                     'cancelled_by' => Auth::id(),
                 ]);
 
-                Mail::mailer($mailer)->to($payment->customer_email)->send(new PaymentCancelledNotice(
+                Mail::mailer($mailer)->to($recipientEmail)->send(new PaymentCancelledNotice(
                     payment: $payment->fresh(),
                     cancelReason: $validated['cancel_reason'],
                 ));
+
+                Log::info('Cancel payment email sent', [
+                    'payment_id' => $payment->id,
+                    'mailer' => $mailer,
+                    'recipient' => $recipientEmail,
+                ]);
             });
         } catch (\Throwable $e) {
             Log::error('Cancel payment failed', [
                 'payment_id' => $payment->id,
+                'mailer' => $mailer,
+                'recipient' => $recipientEmail,
                 'message' => $e->getMessage(),
             ]);
 
@@ -178,7 +201,7 @@ class PaymentConfirmationController extends Controller
         $itemsWithLinks = $this->enrichPurchasedItems(array_values($items));
 
         $payment = PaymentConfirmation::create([
-            'customer_email' => $validated['email'],
+            'customer_email' => strtolower(trim((string) $validated['email'])),
             'total_amount' => (float) ($cart['total'] ?? 0),
             'items' => $itemsWithLinks,
             'payment_proof_path' => $proofPath,
