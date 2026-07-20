@@ -11,6 +11,7 @@ class Plugin extends Model
         'price',
         'description',
         'image',
+        'link',
     ];
 
     protected $casts = [

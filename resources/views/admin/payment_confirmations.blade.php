@@ -66,7 +66,7 @@
 
                     <div class="flex flex-wrap items-center gap-3">
                         @if ($payment->status === 'pending')
-                            <form action="{{ route('admin.payments.acceptById') }}" method="POST">
+                            <form action="{{ route('admin.payments.acceptById') }}" method="POST" onsubmit="return confirmAcceptTwice(event)">
                                 @csrf
                                 <input type="hidden" name="payment_id" value="{{ $payment->id }}">
                                 <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-black px-4 py-2 text-sm font-semibold text-white hover:opacity-90 dark:bg-white dark:text-black transition">
@@ -104,13 +104,15 @@
                             @endif
                         @endif
 
-                        <form action="{{ route('admin.payments.destroy', $payment) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('Yakin ingin menghapus data pembayaran ini?')" class="inline-flex items-center justify-center rounded-lg border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 dark:border-red-900/40 dark:text-red-400 dark:hover:bg-red-950/30 transition">
-                                Hapus
-                            </button>
-                        </form>
+                        @if ($payment->status !== 'pending')
+                            <form action="{{ route('admin.payments.destroy', $payment) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Yakin ingin menghapus data pembayaran ini?')" class="inline-flex items-center justify-center rounded-lg border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 dark:border-red-900/40 dark:text-red-400 dark:hover:bg-red-950/30 transition">
+                                    Hapus
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </div>
             @endforeach
@@ -118,3 +120,21 @@
     @endif
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function confirmAcceptTwice(event) {
+    if (!confirm('Yakin ingin menerima pembayaran ini?')) {
+        if (event) event.preventDefault();
+        return false;
+    }
+
+    if (!confirm('Konfirmasi sekali lagi: lanjutkan proses ACCEPTED untuk pembayaran ini?')) {
+        if (event) event.preventDefault();
+        return false;
+    }
+
+    return true;
+}
+</script>
+@endpush

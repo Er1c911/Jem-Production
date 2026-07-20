@@ -22,6 +22,7 @@ class PluginController extends Controller
             'price' => 'required|numeric|min:0',
             'description' => 'required|string',
             'image' => 'nullable|url',
+            'link' => 'nullable|url|max:2048',
         ]);
 
         // If no image URL provided, set to null
@@ -48,6 +49,7 @@ class PluginController extends Controller
             'price' => 'required|numeric|min:0',
             'description' => 'required|string',
             'image' => 'nullable|url',
+            'link' => 'nullable|url|max:2048',
         ]);
 
         // If image changed from a stored path to a URL, try delete old stored file

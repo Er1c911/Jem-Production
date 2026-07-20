@@ -29,6 +29,45 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @foreach ($plugins as $item)
                 <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4">
+                    @php
+                        $disk = config('filesystems.default') ?? env('FILESYSTEM_DISK', 'local');
+                        if ($disk === 'local') {
+                            $disk = 'public';
+                        }
+
+                        $imageExists = false;
+                        $imageSrc = null;
+
+                        if (!empty($item->image)) {
+                            if (preg_match('/^https?:\/\//i', $item->image)) {
+                                $imageExists = true;
+                                $imageSrc = $item->image;
+                            } else {
+                                try {
+                                    $imageExists = \Illuminate\Support\Facades\Storage::disk($disk)->exists($item->image);
+                                    if ($imageExists && $disk === 'public') {
+                                        $publicPath = public_path('storage/' . $item->image);
+                                        $imageExists = $imageExists && file_exists($publicPath);
+                                    }
+
+                                    if ($imageExists) {
+                                        $imageSrc = \Illuminate\Support\Facades\Storage::url($item->image);
+                                    }
+                                } catch (\Exception $e) {
+                                    $imageExists = false;
+                                }
+                            }
+                        }
+                    @endphp
+
+                    <div class="rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-50 dark:bg-zinc-950">
+                        @if ($imageExists)
+                            <img src="{{ $imageSrc }}" alt="{{ $item->title }}" class="h-44 w-full object-cover">
+                        @else
+                            <div class="h-44 w-full flex items-center justify-center text-sm text-zinc-400">No image</div>
+                        @endif
+                    </div>
+
                     <div class="flex items-start justify-between gap-3">
                         <div>
                             <h3 class="text-lg font-bold uppercase tracking-wide">{{ $item->title }}</h3>
@@ -36,7 +75,7 @@
                         </div>
                         <div class="flex flex-wrap justify-end gap-2">
                             <button
-                                onclick="editPlugin({{ $item->id }}, @js($item->title), @js((string) $item->price), @js($item->description), @js($item->image))"
+                                onclick="editPlugin({{ $item->id }}, @js($item->title), @js((string) $item->price), @js($item->description), @js($item->image), @js($item->link))"
                                 class="text-xs bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition"
                             >
                                 Edit
@@ -88,6 +127,12 @@
             <small class="opacity-60">Masukkan URL gambar (HTTPS)</small>
         </div>
 
+        <div>
+            <label class="text-sm font-bold uppercase tracking-widest opacity-60">Link Plugin</label>
+            <input type="url" name="link" id="pluginLink" placeholder="https://..." class="w-full border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2 mt-2 bg-white dark:bg-zinc-900 focus:outline-none focus:border-black dark:focus:border-white transition">
+            <small class="opacity-60">Link ini dipakai untuk pengiriman item plugin.</small>
+        </div>
+
         <div class="flex flex-col sm:flex-row gap-3 pt-4">
             <button type="button" onclick="document.getElementById('pluginModal').close()" class="flex-1 border border-zinc-200 dark:border-zinc-800 px-4 py-2 rounded-lg font-bold uppercase tracking-widest text-sm hover:bg-zinc-50 dark:hover:bg-zinc-900 transition">
                 Batal
@@ -100,12 +145,13 @@
 </dialog>
 
 <script>
-    function editPlugin(id, title, price, description, image) {
+    function editPlugin(id, title, price, description, image, link) {
         document.getElementById('pluginModalTitle').textContent = 'Edit Plugin';
         document.getElementById('pluginTitle').value = title;
         document.getElementById('pluginPrice').value = price;
         document.getElementById('pluginDescription').value = description;
         document.getElementById('pluginImage').value = image || '';
+        document.getElementById('pluginLink').value = link || '';
 
         const form = document.getElementById('pluginForm');
         form.action = '{{ route("admin.plugins.update", ":id") }}'.replace(':id', id);
